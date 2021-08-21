@@ -162,7 +162,7 @@ public class ChatWindow extends JFrame {
                 h.close();
             }
 
-            String logFile = logDirectory + "\\jacekpozchat_" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")
+            String logFile = logDirectory + "\\xnor_" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")
                     .format(new Date(System.currentTimeMillis())) + ".log";
             FileHandler fh = new FileHandler(logFile);
             currentLogFile = logFile;
