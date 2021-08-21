@@ -66,11 +66,7 @@ public class MessageScreen implements Screen {
                 );
                 c.getMessages().add(m);
                 sendMessage(m);
-                messages.addMessage(new MessagePanel(
-                        window.getClient().getUser(),
-                        window.getClient().getUser(),
-                        m
-                ));
+                addMessage(window.getClient().getUser(), m);
                 LOGGER.log(Level.INFO, "Sent message", m);
                 messageField.setText("");
                 JScrollBar bar = messagesScrollPane.getVerticalScrollBar();
@@ -116,16 +112,18 @@ public class MessageScreen implements Screen {
         window.getClient().setChat(c);
         window.send(c);
         messages.removeAllMessages();
-        c.getMessages().forEach(message ->
-                messages.addMessage(new MessagePanel(
-                        window.getClient().getUser(),
-                        messageAuthors.get(message),
-                        message
-                ))
-        );
+        c.getMessages().forEach(message -> addMessage(messageAuthors.get(message), message));
         messageField.setEnabled(true);
         sendMessageButton.setEnabled(true);
         messages.revalidate();
+    }
+
+    public void addMessage(User author, Message message) {
+        messages.addMessage(new MessagePanel(
+                window.getClient().getUser(),
+                author,
+                message
+        ));
     }
 
     @Override
@@ -197,11 +195,7 @@ public class MessageScreen implements Screen {
             for (User u : usersInChats.get(window.getClient().getChat())) {
                 if (u.getUserID() == m.getAuthorID()) {
                     messageAuthors.put(m, u);
-                    messages.addMessage(new MessagePanel(
-                            window.getClient().getUser(),
-                            u,
-                            m
-                    ));
+//                    addMessage(u, m);
                 }
             }
         }
