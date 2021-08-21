@@ -44,12 +44,12 @@
       </component>
       <scrollpane id="24110" binding="messagesScrollPane">
         <constraints>
-          <grid row="0" column="4" row-span="2" col-span="2" vsize-policy="7" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="4" row-span="2" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <background color="-12829636"/>
-          <doubleBuffered value="false"/>
           <foreground color="-1"/>
+          <horizontalScrollBarPolicy value="31"/>
           <verticalScrollBarPolicy value="22"/>
         </properties>
         <border type="none"/>
@@ -57,37 +57,26 @@
           <component id="76fe" class="com.github.jacekpoz.client.desktop.gui.MessageContainer" binding="messages" custom-create="true">
             <constraints/>
             <properties>
-              <autoscrolls value="false"/>
               <background color="-12829636"/>
-              <doubleBuffered value="true"/>
-              <focusCycleRoot value="false"/>
-              <focusTraversalPolicyProvider value="false"/>
               <foreground color="-1"/>
-              <inheritsPopupMenu value="false"/>
-              <maximumSize width="-1" height="-1"/>
-              <minimumSize width="250" height="100"/>
-              <preferredSize width="350" height="150"/>
-              <requestFocusEnabled value="true"/>
             </properties>
           </component>
         </children>
       </scrollpane>
       <scrollpane id="3fb00" binding="chatsScrollPane">
         <constraints>
-          <grid row="1" column="0" row-span="2" col-span="4" vsize-policy="7" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <minimum-size width="50" height="150"/>
-            <preferred-size width="100" height="250"/>
-          </grid>
+          <grid row="1" column="0" row-span="2" col-span="4" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <background color="-12829636"/>
           <foreground color="-1"/>
-          <verticalScrollBarPolicy value="22"/>
+          <verticalScrollBarPolicy value="20"/>
         </properties>
         <border type="none"/>
         <children>
           <component id="8e659" class="com.github.jacekpoz.client.desktop.gui.ChatsContainer" binding="chats" custom-create="true">
             <constraints/>
+            <properties/>
           </component>
         </children>
       </scrollpane>

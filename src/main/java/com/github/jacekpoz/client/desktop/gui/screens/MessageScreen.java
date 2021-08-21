@@ -59,8 +59,8 @@ public class MessageScreen implements Screen {
                 Chat c = window.getClient().getChat();
                 Message m = new Message(
                         c.getMessages().size(),
-                        c.getId(),
-                        window.getClient().getUser().getId(),
+                        c.getChatID(),
+                        window.getClient().getUser().getUserID(),
                         messageField.getText(),
                         LocalDateTime.now()
                 );
@@ -98,6 +98,7 @@ public class MessageScreen implements Screen {
         if (users != null) cp.setToolTipText(Util.userListToString(users));
         else update();
         chats.addChat(cp);
+        chats.revalidate();
     }
 
     private void sendMessage(Message message) {
@@ -125,7 +126,6 @@ public class MessageScreen implements Screen {
         messageField.setEnabled(true);
         sendMessageButton.setEnabled(true);
         messages.revalidate();
-        messages.repaint();
     }
 
     @Override
@@ -134,9 +134,8 @@ public class MessageScreen implements Screen {
     }
 
     private void updateUsersChats() {
-
         for (Chat c : usersChats) {
-            window.send(new GetUsersInChatQuery(c.getId(), getScreenID()));
+            window.send(new GetUsersInChatQuery(c.getChatID(), getScreenID()));
             for (Message m : c.getMessages()) {
                 window.send(new GetMessageAuthorQuery(
                         m.getMessageID(),
@@ -152,10 +151,9 @@ public class MessageScreen implements Screen {
     public void update() {
         try {
             usersInChats.forEach((c, lu) -> usersInChats.remove(c, lu));
-        } catch (ConcurrentModificationException ignored) {
-        }
+        } catch (ConcurrentModificationException ignored) {}
         if (window.getClient().isLoggedIn()) {
-            window.send(new GetUsersChatsQuery(window.getClient().getUser().getId(), getScreenID()));
+            window.send(new GetUsersChatsQuery(window.getClient().getUser().getUserID(), getScreenID()));
         }
         updateUsersChats();
     }
@@ -181,14 +179,14 @@ public class MessageScreen implements Screen {
             if (ur.getQuery() instanceof GetMessageAuthorQuery) {
                 GetMessageAuthorQuery gmaq = (GetMessageAuthorQuery) ur.getQuery();
                 for (Chat c : usersChats)
-                    if (c.getId() == gmaq.getChatID())
+                    if (c.getChatID() == gmaq.getChatID())
                         for (Message m : c.getMessages())
                             if (m.getMessageID() == gmaq.getMessageID())
                                 messageAuthors.put(m, ur.get(0));
             } else if (ur.getQuery() instanceof GetUsersInChatQuery) {
                 GetUsersInChatQuery guicq = (GetUsersInChatQuery) ur.getQuery();
                 for (Chat c : usersChats) {
-                    if (c.getId() == guicq.getChatID()) {
+                    if (c.getChatID() == guicq.getChatID()) {
                         usersInChats.put(c, ur.get());
                         return;
                     }
@@ -197,7 +195,7 @@ public class MessageScreen implements Screen {
         } else if (s instanceof Message) {
             Message m = (Message) s;
             for (User u : usersInChats.get(window.getClient().getChat())) {
-                if (u.getId() == m.getAuthorID()) {
+                if (u.getUserID() == m.getAuthorID()) {
                     messageAuthors.put(m, u);
                     messages.addMessage(new MessagePanel(
                             window.getClient().getUser(),
@@ -361,5 +359,6 @@ public class MessageScreen implements Screen {
 
     private void createUIComponents() {
         messages = new MessageContainer(window);
+        chats = new ChatsContainer();
     }
 }

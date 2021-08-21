@@ -15,12 +15,12 @@ public class ChatPanel extends JButton {
         setBackground(new Color(60, 60, 60));
         setForeground(Color.WHITE);
         setBorderPainted(false);
-        label = new JLabel(c.getName());
+        label = new JLabel(c.getChatName());
         label.setHorizontalAlignment(SwingConstants.LEFT);
         label.setVerticalAlignment(SwingConstants.CENTER);
         label.setBackground(new Color(60, 60, 60));
         label.setForeground(Color.WHITE);
-        label.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2, true));
+        deselectChat();
         add(label);
         addActionListener(e -> {
             m.setChat(c);

@@ -3,3 +3,7 @@
 /build/
 /build/classes/java/main/
 /.idea/
+
+*.log
+# from what I know this is a temp file when xnor creates a log
+*.log.lck

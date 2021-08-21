@@ -97,7 +97,7 @@ public class CreateChatsScreen implements Screen {
             if (inputName.isEmpty()) {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < users.size(); i++) {
-                    sb.append(users.get(i).getNickname());
+                    sb.append(users.get(i).getUsername());
                     if (i < users.size() - 1)
                         sb.append(", ");
                 }
@@ -107,7 +107,7 @@ public class CreateChatsScreen implements Screen {
             window.send(new InsertChatQuery(
                     chatName,
                     users.stream()
-                            .map(User::getId)
+                            .map(User::getUserID)
                             .collect(Collectors.toList()),
                     getScreenID())
             );
@@ -122,7 +122,7 @@ public class CreateChatsScreen implements Screen {
 
     @Override
     public void update() {
-        window.send(new GetFriendsQuery(window.getClient().getUser().getId(), getScreenID()));
+        window.send(new GetFriendsQuery(window.getClient().getUser().getUserID(), getScreenID()));
     }
 
     @Override
@@ -144,7 +144,7 @@ public class CreateChatsScreen implements Screen {
             ChatResult cr = (ChatResult) s;
             if (cr.getQuery() instanceof InsertChatQuery) {
                 InsertChatQuery icq = (InsertChatQuery) cr.getQuery();
-                if (cr.success()) {
+                if (cr.getSuccess()) {
                     LOGGER.log(Level.INFO, "Created chat", icq.getChatName());
                     window.getMessageScreen().addChat(cr.get(0));
                     window.setScreen(window.getMessageScreen());

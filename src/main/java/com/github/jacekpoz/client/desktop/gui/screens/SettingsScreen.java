@@ -87,7 +87,7 @@ public class SettingsScreen implements Screen {
                     null
             );
             if (result == JOptionPane.YES_OPTION) {
-                window.send(new DeleteUserQuery(window.getClient().getUser().getId(), getScreenID()));
+                window.send(new DeleteUserQuery(window.getClient().getUser().getUserID(), getScreenID()));
                 window.logout();
             }
         });

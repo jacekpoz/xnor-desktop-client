@@ -12,9 +12,8 @@ public class XnorDesktopClientMain {
 
     public static void main(String[] args) {
 
-        if (args.length != 2) {
+        if (args.length != 2)
             System.err.println("You need to input the host and the port");
-        }
 
         String host = args[0];
         int port = Integer.parseInt(args[1]);

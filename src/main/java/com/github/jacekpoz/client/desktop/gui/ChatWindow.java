@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.jacekpoz.client.desktop.XnorDesktopClient;
 import com.github.jacekpoz.client.desktop.InputHandler;
 import com.github.jacekpoz.client.desktop.gui.screens.*;
-import com.github.jacekpoz.client.gui.screens.*;
 import com.github.jacekpoz.client.desktop.logging.LogFormatter;
 import com.github.jacekpoz.common.jackson.JsonObjectMapper;
 import com.github.jacekpoz.common.sendables.Sendable;
@@ -125,6 +124,8 @@ public class ChatWindow extends JFrame {
         screen.updateUI();
         setContentPane(screen.getPanel());
         currentScreen = screen;
+        revalidate();
+        repaint();
     }
 
     public void send(Sendable s) {

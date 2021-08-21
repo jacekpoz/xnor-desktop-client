@@ -98,7 +98,7 @@ public class FriendsScreen implements Screen {
     private void addUsersToPanel(JPanel p, List<User> users, int type) {
         p.removeAll();
         for (User u : users)
-            if (window.getClient().getUser().getId() != u.getId())
+            if (window.getClient().getUser().getUserID() != u.getUserID())
                 p.add(new UserPanel(window, p, window.getClient().getUser(), u, type));
         p.revalidate();
     }
@@ -110,8 +110,8 @@ public class FriendsScreen implements Screen {
 
     @Override
     public void update() {
-        window.send(new GetFriendsQuery(window.getClient().getUser().getId(), getScreenID()));
-        window.send(new GetFriendRequestsQuery(window.getClient().getUser().getId(), getScreenID()));
+        window.send(new GetFriendsQuery(window.getClient().getUser().getUserID(), getScreenID()));
+        window.send(new GetFriendRequestsQuery(window.getClient().getUser().getUserID(), getScreenID()));
         window.send(new GetAllUsersQuery(getScreenID()));
     }
 

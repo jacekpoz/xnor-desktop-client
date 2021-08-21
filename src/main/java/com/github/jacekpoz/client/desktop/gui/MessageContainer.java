@@ -16,7 +16,6 @@ public class MessageContainer extends JPanel {
     private final JLabel noMessages;
 
     public MessageContainer(ChatWindow w) {
-        new JPanel();
         window = w;
         setBackground(new Color(60, 60, 60));
         setForeground(Color.WHITE);
@@ -33,14 +32,13 @@ public class MessageContainer extends JPanel {
                 for (Component c : getComponents()) {
                     c.setMaximumSize(new Dimension(eventWidth, c.getHeight()));
                     c.revalidate();
-                    c.repaint();
                 }
+                revalidate();
             }
             @Override
             public void componentMoved(ComponentEvent e) {}
             @Override
             public void componentShown(ComponentEvent e) {}
-
             @Override
             public void componentHidden(ComponentEvent e) {}
         });
@@ -53,12 +51,10 @@ public class MessageContainer extends JPanel {
 
         add(mp);
         revalidate();
-        repaint();
     }
 
     public void removeAllMessages() {
         removeAll();
         revalidate();
-        repaint();
     }
 }

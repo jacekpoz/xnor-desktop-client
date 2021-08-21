@@ -40,7 +40,7 @@ public class UserPanel extends JPanel {
         clientUser = u;
         panelUser = pU;
         userPanelType = type;
-        userLabel = new JLabel(panelUser.getNickname() + "(ID=" + panelUser.getId() + ")");
+        userLabel = new JLabel(panelUser.getUsername() + "(ID=" + panelUser.getUserID() + ")");
         userLabel.setBackground(new Color(60, 60, 60));
         userLabel.setForeground(Color.WHITE);
         add(userLabel);
@@ -62,8 +62,8 @@ public class UserPanel extends JPanel {
                 button1 = new JButton(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/add_friend.png"))));
                 button1.addActionListener(a -> {
                     window.send(new SendFriendRequestQuery(
-                            clientUser.getId(),
-                            panelUser.getId(),
+                            clientUser.getUserID(),
+                            panelUser.getUserID(),
                             window.getFriendsScreen().getScreenID())
                     );
                     LOGGER.log(Level.INFO, "Sent friend request", panelUser);
@@ -75,8 +75,8 @@ public class UserPanel extends JPanel {
                 button1.addActionListener(a -> {
                     clientUser.removeFriend(panelUser);
                     window.send(new RemoveFriendQuery(
-                            clientUser.getId(),
-                            panelUser.getId(),
+                            clientUser.getUserID(),
+                            panelUser.getUserID(),
                             window.getFriendsScreen().getScreenID())
                     );
                     LOGGER.log(Level.INFO, "Removed friend", panelUser);
@@ -88,8 +88,8 @@ public class UserPanel extends JPanel {
                 button1.addActionListener(a -> {
                     clientUser.addFriend(panelUser);
                     window.send(new AcceptFriendRequestQuery(
-                            panelUser.getId(),
-                            clientUser.getId(),
+                            panelUser.getUserID(),
+                            clientUser.getUserID(),
                             window.getFriendsScreen().getScreenID()
                     ));
                     LOGGER.log(Level.INFO, "Accepted friend request", panelUser);
@@ -98,8 +98,8 @@ public class UserPanel extends JPanel {
                 button2 = new JButton(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/delete_friend.png"))));
                 button2.addActionListener(a -> {
                     window.send(new DenyFriendRequestQuery(
-                            panelUser.getId(),
-                            clientUser.getId(),
+                            panelUser.getUserID(),
+                            clientUser.getUserID(),
                             window.getFriendsScreen().getScreenID()
                     ));
                     LOGGER.log(Level.INFO, "Denied friend request", panelUser);
