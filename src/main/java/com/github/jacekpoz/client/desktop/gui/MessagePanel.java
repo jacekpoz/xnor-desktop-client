@@ -6,20 +6,30 @@ import com.github.jacekpoz.common.sendables.User;
 import lombok.Getter;
 
 import javax.swing.*;
+import javax.swing.text.html.HTMLDocument;
 import java.awt.*;
 
-public class MessagePanel extends JLabel {
+public class MessagePanel extends JTextPane {
 
     @Getter
     private final boolean isCurrentUserAuthor;
 
     public MessagePanel(User currentUser, User author, Message m) {
-        setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+        setEnabled(false);
+        setBorder(null);
+        setOpaque(false);
+        setContentType("text/html");
+
+        // default font trick taken from https://explodingpixels.wordpress.com/2008/10/28/make-jeditorpane-use-the-system-font/
+        Font font = UIManager.getFont("Label.font");
+        String bodyRule = "body { font-family: " + font.getFamily() + "; " +
+                "font-size: " + font.getSize() + "pt; color: white; }";
+        ((HTMLDocument) getDocument()).getStyleSheet().addRule(bodyRule);
+
         setText("<html>" + author.getUsername() + ": " + m.getContent() + "</html>");
         setToolTipText(Util.localDateTimeToString(m.getSentDate()));
         setBackground(new Color(60, 60, 60));
         setForeground(Color.WHITE);
-        setMaximumSize(new Dimension(100, 25));
 
         isCurrentUserAuthor = currentUser.equals(author);
     }

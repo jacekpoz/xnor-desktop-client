@@ -305,5 +305,4 @@ public class SettingsScreen implements Screen {
     public JComponent $$$getRootComponent$$$() {
         return settingsScreen;
     }
-
 }

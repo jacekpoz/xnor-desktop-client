@@ -11,21 +11,6 @@
     </properties>
     <border type="none"/>
     <children>
-      <component id="df56a" class="javax.swing.JTextField" binding="messageField">
-        <constraints>
-          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-            <minimum-size width="100" height="25"/>
-            <preferred-size width="150" height="25"/>
-          </grid>
-        </constraints>
-        <properties>
-          <background color="-12829636"/>
-          <caretColor color="-1"/>
-          <editable value="true"/>
-          <enabled value="false"/>
-          <foreground color="-1"/>
-        </properties>
-      </component>
       <component id="2b8c1" class="javax.swing.JButton" binding="sendMessageButton">
         <constraints>
           <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false">
@@ -147,6 +132,33 @@
           <text value=""/>
         </properties>
       </component>
+      <scrollpane id="78bbc" binding="messageAreaScrollPane">
+        <constraints>
+          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-12829636"/>
+          <foreground color="-1"/>
+          <horizontalScrollBarPolicy value="30"/>
+          <verticalScrollBarPolicy value="20"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="df56a" class="javax.swing.JTextPane" binding="messageArea">
+            <constraints/>
+            <properties>
+              <background color="-12829636"/>
+              <caretColor color="-1"/>
+              <contentType value="text/plain"/>
+              <editable value="true"/>
+              <enabled value="false"/>
+              <foreground color="-1"/>
+              <margin top="0" left="0" bottom="0" right="0"/>
+              <opaque value="true"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
     </children>
   </grid>
 </form>

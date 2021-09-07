@@ -1,13 +1,14 @@
 package com.github.jacekpoz.client.desktop;
 
+import uk.co.caprica.vlcj.factory.discovery.NativeDiscovery;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class XnorDesktopClientMain {
-
-
+    
     private final static Logger LOGGER = Logger.getLogger(XnorDesktopClientMain.class.getName());
 
     public static void main(String[] args) {
@@ -22,6 +23,8 @@ public class XnorDesktopClientMain {
             LOGGER.log(Level.SEVERE, "RuntimeException in thread " + t, e);
             e.printStackTrace();
         });
+
+        new NativeDiscovery().discover();
 
         try {
             XnorDesktopClient c = new XnorDesktopClient(new Socket(host, port));

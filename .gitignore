@@ -3,6 +3,7 @@
 /build/
 /build/classes/java/main/
 /.idea/
+/out/
 
 *.log
 # from what I know this is a temp file when xnor creates a log

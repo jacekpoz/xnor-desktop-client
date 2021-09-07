@@ -111,7 +111,6 @@ public class CreateChatsScreen implements Screen {
                             .collect(Collectors.toList()),
                     getScreenID())
             );
-
         });
     }
 
@@ -329,5 +328,4 @@ public class CreateChatsScreen implements Screen {
     public JComponent $$$getRootComponent$$$() {
         return createChatsScreen;
     }
-
 }

@@ -120,12 +120,11 @@ public class ChatWindow extends JFrame {
 
     public void setScreen(Screen screen) {
         lastScreen = currentScreen;
+        setContentPane(screen.getPanel());
         screen.update();
         screen.updateUI();
-        setContentPane(screen.getPanel());
         currentScreen = screen;
         revalidate();
-        repaint();
     }
 
     public void send(Sendable s) {

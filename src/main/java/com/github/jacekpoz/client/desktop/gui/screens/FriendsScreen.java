@@ -294,5 +294,4 @@ public class FriendsScreen implements Screen {
     public JComponent $$$getRootComponent$$$() {
         return friendsScreen;
     }
-
 }

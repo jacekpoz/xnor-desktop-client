@@ -276,5 +276,4 @@ public class RegisterScreen implements Screen {
     public JComponent $$$getRootComponent$$$() {
         return registerScreen;
     }
-
 }

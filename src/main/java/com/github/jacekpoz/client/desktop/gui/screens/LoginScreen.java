@@ -291,5 +291,4 @@ public class LoginScreen implements Screen {
     public JComponent $$$getRootComponent$$$() {
         return loginScreen;
     }
-
 }

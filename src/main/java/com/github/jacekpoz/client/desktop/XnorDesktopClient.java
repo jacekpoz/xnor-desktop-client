@@ -19,9 +19,13 @@ public class XnorDesktopClient {
     @Getter @Setter
     private User user;
     @Getter @Setter
+    private Chat chat;
+    @Getter @Setter
     private boolean isLoggedIn;
     @Getter @Setter
-    private Chat chat;
+    private boolean isOnlineMode;
+    @Getter @Setter
+    private boolean isVLCAvailable;
 
     public XnorDesktopClient(Socket s) {
         socket = s;

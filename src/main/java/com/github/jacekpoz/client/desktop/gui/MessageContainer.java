@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class MessageContainer extends JPanel {
@@ -23,31 +25,22 @@ public class MessageContainer extends JPanel {
         noMessages = new JLabel(window.getLangString("app.no_messages_in_chat"));
         noMessages.setBackground(new Color(60, 60, 60));
         noMessages.setForeground(Color.WHITE);
-        noMessages.setHorizontalAlignment(SwingConstants.CENTER);
+        noMessages.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(noMessages);
-        addComponentListener(new ComponentListener() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                int eventWidth = e.getComponent().getWidth();
-                for (Component c : getComponents()) {
-                    c.setMaximumSize(new Dimension(eventWidth, c.getHeight()));
-                    c.revalidate();
-                }
-                revalidate();
-            }
-            @Override
-            public void componentMoved(ComponentEvent e) {}
-            @Override
-            public void componentShown(ComponentEvent e) {}
-            @Override
-            public void componentHidden(ComponentEvent e) {}
-        });
     }
 
     public void addMessage(MessagePanel mp) {
-        remove(noMessages);
-        mp.setMaximumSize(new Dimension(getWidth(), mp.getHeight()));
-        if (mp.isCurrentUserAuthor()) mp.setHorizontalAlignment(SwingConstants.RIGHT);
+        if (Arrays.asList(getComponents()).contains(noMessages)) {
+            remove(noMessages);
+            repaint();
+        }
+        if (mp.isCurrentUserAuthor()) {
+            mp.setAlignmentX(Component.RIGHT_ALIGNMENT);
+//            mp.setHorizontalAlignment(SwingConstants.RIGHT);
+        } else {
+            mp.setAlignmentX(Component.LEFT_ALIGNMENT);
+//            mp.setHorizontalAlignment(SwingConstants.LEFT);
+        }
 
         add(mp);
         revalidate();
@@ -56,5 +49,6 @@ public class MessageContainer extends JPanel {
     public void removeAllMessages() {
         removeAll();
         revalidate();
+        repaint();
     }
 }
