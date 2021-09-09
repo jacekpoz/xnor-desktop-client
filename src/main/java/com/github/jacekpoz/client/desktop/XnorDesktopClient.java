@@ -23,12 +23,14 @@ public class XnorDesktopClient {
     @Getter @Setter
     private boolean isLoggedIn;
     @Getter @Setter
-    private boolean isOnlineMode;
+    private boolean isOnline;
     @Getter @Setter
     private boolean isVLCAvailable;
 
-    public XnorDesktopClient(Socket s) {
+    public XnorDesktopClient(Socket s, boolean isOnline, boolean isVLCAvailable) {
         socket = s;
+        this.isOnline = isOnline;
+        this.isVLCAvailable = isVLCAvailable;
         window = new ChatWindow(this);
         user = new User(-1, "dupa", "dupa dupa", LocalDateTime.MIN);
         chat = new Chat(-1, "dupa", LocalDateTime.MIN, -1);
@@ -39,7 +41,7 @@ public class XnorDesktopClient {
     }
 
     public void stop() throws IOException {
-        socket.close();
+        if (socket != null) socket.close();
         window.dispose();
     }
 

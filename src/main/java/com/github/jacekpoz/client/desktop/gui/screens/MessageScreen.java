@@ -12,10 +12,7 @@ import com.github.jacekpoz.common.sendables.database.results.UserResult;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import org.apache.commons.io.FilenameUtils;
-import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
-import uk.co.caprica.vlcj.player.base.MediaPlayer;
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent;
-import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,10 +22,8 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.*;
@@ -43,8 +38,7 @@ public class MessageScreen implements Screen {
 
     private transient JPanel messageScreen;
     private transient JButton chatsButton;
-    private transient JTextPane messageArea;
-    private transient JButton sendMessageButton;
+    private transient MessageSender messageSender;
     private transient JButton friendsButton;
     private transient MessageContainer messages;
     private transient JScrollPane messagesScrollPane;
@@ -58,9 +52,6 @@ public class MessageScreen implements Screen {
     private Map<Chat, List<User>> usersInChats;
     private Map<Message, User> messageAuthors;
 
-    private long attachmentCounter = 0;
-    private List<Attachment> attachments;
-
     private EmbeddedMediaPlayerComponent empc;
 
     public MessageScreen(ChatWindow w) {
@@ -69,97 +60,21 @@ public class MessageScreen implements Screen {
         usersInChats = new HashMap<>();
         messageAuthors = new HashMap<>();
 
-        attachments = new ArrayList<>();
-
         $$$setupUI$$$();
-        messageArea.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
         Runnable sendMessageRunnable = () -> {
-            if (!messageArea.getText().isEmpty() && messageArea.getComponents().length > 0) {
-                Chat c = window.getClient().getChat();
-                Message m = new Message(
-                        c.getMessages().size(),
-                        c.getChatID(),
-                        window.getClient().getUser().getUserID(),
-                        messageArea.getText(),
-                        LocalDateTime.now()
-                );
-                m.getAttachments().addAll(attachments);
-                m.getAttachments().clear();
-                c.getMessages().add(m);
-                sendMessage(m);
-                addMessage(window.getClient().getUser(), m);
-                attachmentCounter = 0;
-                LOGGER.log(Level.INFO, "Sent message", m);
-                messageArea.setText("");
-                JScrollBar bar = messagesScrollPane.getVerticalScrollBar();
-                bar.setValue(bar.getMaximum());
-            }
+            Message m = messageSender.getMessage();
+            if (m == null) return;
+            Chat c = window.getClient().getChat();
+            c.setMessageCounter(c.getMessageCounter() + 1);
+            sendMessage(m);
+            addMessage(window.getClient().getUser(), m);
+            LOGGER.log(Level.INFO, "Sent message", m);
+            JScrollBar bar = messagesScrollPane.getVerticalScrollBar();
+            bar.setValue(bar.getMaximum());
         };
 
-        ActionListener sendMessageAction = e -> sendMessageRunnable.run();
-
-        messageArea.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER && e.isShiftDown()) {
-                    messageArea.setText(messageArea.getText() + "\n");
-                    e.consume();
-                } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    sendMessageRunnable.run();
-                    e.consume();
-                } else if (e.getKeyCode() == KeyEvent.VK_V && e.isControlDown()) {
-                    Transferable clipboardContent = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-
-                    if (clipboardContent == null) {
-                        e.consume();
-                        return;
-                    }
-                    if (clipboardContent.isDataFlavorSupported(DataFlavor.imageFlavor)) {
-                        try {
-                            BufferedImage img = (BufferedImage) clipboardContent.getTransferData(DataFlavor.imageFlavor);
-                            messageArea.insertIcon(new ImageIcon(img));
-                            e.consume();
-                        } catch (UnsupportedFlavorException | IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    } else if (clipboardContent.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-                        try {
-                            List<File> files = (List<File>) clipboardContent.getTransferData(DataFlavor.javaFileListFlavor);
-
-                            for (File file : files) {
-                                System.out.println(FilenameUtils.getExtension(file.getPath()));
-                                if (FilenameUtils.getExtension(file.getPath()).equals("mp4")) {
-                                    empc = new EmbeddedMediaPlayerComponent();
-                                    messageArea.insertComponent(empc);
-                                    empc.mediaPlayer().media().play(file.getPath());
-                                    System.out.println(empc);
-                                }
-
-                                Attachment a = new Attachment(
-                                        attachmentCounter,
-                                        messageArea.getText().length(),
-                                        FilenameUtils.getExtension(file.getPath())
-                                );
-
-                                try (FileInputStream fis = new FileInputStream(file)) {
-                                    int c;
-                                    while ((c = fis.read()) != -1) {
-                                        System.out.println((byte) c);
-                                        a.getFileContents().add((byte) c);
-                                    }
-                                }
-
-                                attachments.add(a);
-                            }
-                        } catch (UnsupportedFlavorException | IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                }
-            }
-        });
-        sendMessageButton.addActionListener(sendMessageAction);
+        messageSender.addListener(sendMessageRunnable);
         friendsButton.addActionListener(e -> window.setScreen(window.getFriendsScreen()));
         chatsButton.addActionListener(e -> window.setScreen(window.getCreateChatsScreen()));
         settingsButton.addActionListener(e -> {
@@ -196,9 +111,12 @@ public class MessageScreen implements Screen {
         window.getClient().setChat(c);
         window.send(c);
         messages.removeAllMessages();
-        c.getMessages().forEach(message -> addMessage(messageAuthors.get(message), message));
-        messageArea.setEnabled(true);
-        sendMessageButton.setEnabled(true);
+        c.getMessages().forEach(message -> {
+            User u = messageAuthors.get(message);
+            if (u == null) update();
+            else addMessage(u, message);
+        });
+        messageSender.setEnabled(true);
         messages.revalidate();
     }
 
@@ -293,13 +211,14 @@ public class MessageScreen implements Screen {
 
     @Override
     public void changeLanguage() {
-        sendMessageButton.setText(window.getLangString("app.send"));
+        messageSender.changeLanguage();
     }
 
 
     private void createUIComponents() {
         messages = new MessageContainer(window);
         chats = new ChatsContainer();
+        messageSender = new MessageSender(window);
     }
 
     /**
@@ -312,23 +231,15 @@ public class MessageScreen implements Screen {
     private void $$$setupUI$$$() {
         createUIComponents();
         messageScreen = new JPanel();
-        messageScreen.setLayout(new GridLayoutManager(3, 6, new Insets(0, 0, 0, 0), 5, 5));
+        messageScreen.setLayout(new GridLayoutManager(3, 7, new Insets(0, 0, 0, 0), 5, 5));
         messageScreen.setBackground(new Color(-12829636));
         messageScreen.setForeground(new Color(-1));
-        sendMessageButton = new JButton();
-        sendMessageButton.setBackground(new Color(-12829636));
-        sendMessageButton.setBorderPainted(false);
-        sendMessageButton.setEnabled(false);
-        sendMessageButton.setFocusPainted(false);
-        sendMessageButton.setForeground(new Color(-1));
-        this.$$$loadButtonText$$$(sendMessageButton, this.$$$getMessageFromBundle$$$("lang", "app.send"));
-        messageScreen.add(sendMessageButton, new GridConstraints(2, 5, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(75, 25), new Dimension(75, 25), 0, false));
         messagesScrollPane = new JScrollPane();
         messagesScrollPane.setBackground(new Color(-12829636));
         messagesScrollPane.setForeground(new Color(-1));
         messagesScrollPane.setHorizontalScrollBarPolicy(31);
         messagesScrollPane.setVerticalScrollBarPolicy(22);
-        messageScreen.add(messagesScrollPane, new GridConstraints(0, 4, 2, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        messageScreen.add(messagesScrollPane, new GridConstraints(0, 4, 2, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         messages.setBackground(new Color(-12829636));
         messages.setForeground(new Color(-1));
         messagesScrollPane.setViewportView(messages);
@@ -378,61 +289,10 @@ public class MessageScreen implements Screen {
         messageAreaScrollPane.setForeground(new Color(-1));
         messageAreaScrollPane.setHorizontalScrollBarPolicy(30);
         messageAreaScrollPane.setVerticalScrollBarPolicy(20);
-        messageScreen.add(messageAreaScrollPane, new GridConstraints(2, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        messageArea = new JTextPane();
-        messageArea.setBackground(new Color(-12829636));
-        messageArea.setCaretColor(new Color(-1));
-        messageArea.setContentType("text/plain");
-        messageArea.setEditable(true);
-        messageArea.setEnabled(false);
-        messageArea.setForeground(new Color(-1));
-        messageArea.setMargin(new Insets(0, 0, 0, 0));
-        messageArea.setOpaque(true);
-        messageAreaScrollPane.setViewportView(messageArea);
-    }
-
-    private static Method $$$cachedGetBundleMethod$$$ = null;
-
-    private String $$$getMessageFromBundle$$$(String path, String key) {
-        ResourceBundle bundle;
-        try {
-            Class<?> thisClass = this.getClass();
-            if ($$$cachedGetBundleMethod$$$ == null) {
-                Class<?> dynamicBundleClass = thisClass.getClassLoader().loadClass("com.intellij.DynamicBundle");
-                $$$cachedGetBundleMethod$$$ = dynamicBundleClass.getMethod("getBundle", String.class, Class.class);
-            }
-            bundle = (ResourceBundle) $$$cachedGetBundleMethod$$$.invoke(null, path, thisClass);
-        } catch (Exception e) {
-            bundle = ResourceBundle.getBundle(path);
-        }
-        return bundle.getString(key);
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    private void $$$loadButtonText$$$(AbstractButton component, String text) {
-        StringBuffer result = new StringBuffer();
-        boolean haveMnemonic = false;
-        char mnemonic = '\0';
-        int mnemonicIndex = -1;
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '&') {
-                i++;
-                if (i == text.length()) break;
-                if (!haveMnemonic && text.charAt(i) != '&') {
-                    haveMnemonic = true;
-                    mnemonic = text.charAt(i);
-                    mnemonicIndex = result.length();
-                }
-            }
-            result.append(text.charAt(i));
-        }
-        component.setText(result.toString());
-        if (haveMnemonic) {
-            component.setMnemonic(mnemonic);
-            component.setDisplayedMnemonicIndex(mnemonicIndex);
-        }
+        messageScreen.add(messageAreaScrollPane, new GridConstraints(2, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        messageSender.setBackground(new Color(-12829636));
+        messageSender.setForeground(new Color(-1));
+        messageAreaScrollPane.setViewportView(messageSender);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.github.jacekpoz.client.desktop;
 
 import uk.co.caprica.vlcj.factory.discovery.NativeDiscovery;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -24,14 +25,20 @@ public class XnorDesktopClientMain {
             e.printStackTrace();
         });
 
-        new NativeDiscovery().discover();
+//        try {
+//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+//            LOGGER.log(Level.SEVERE, "Could not load system look and feel", e);
+//        }
+
+        boolean isVLCAvaliable = new NativeDiscovery().discover();
 
         try {
-            XnorDesktopClient c = new XnorDesktopClient(new Socket(host, port));
-            c.start();
+            new XnorDesktopClient(new Socket(host, port), true, isVLCAvaliable).start();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Failed to connect to server", e);
-            System.exit(1);
+            System.out.println("dupa");
+            new XnorDesktopClient(null, false, isVLCAvaliable).start();
         }
 
     }

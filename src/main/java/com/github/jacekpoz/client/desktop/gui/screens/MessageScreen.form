@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.github.jacekpoz.client.desktop.gui.screens.MessageScreen">
-  <grid id="27dc6" binding="messageScreen" layout-manager="GridLayoutManager" row-count="3" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="5" vgap="5">
+  <grid id="27dc6" binding="messageScreen" layout-manager="GridLayoutManager" row-count="3" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="5" vgap="5">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
       <xy x="20" y="20" width="1044" height="400"/>
@@ -11,25 +11,9 @@
     </properties>
     <border type="none"/>
     <children>
-      <component id="2b8c1" class="javax.swing.JButton" binding="sendMessageButton">
-        <constraints>
-          <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false">
-            <preferred-size width="75" height="25"/>
-            <maximum-size width="75" height="25"/>
-          </grid>
-        </constraints>
-        <properties>
-          <background color="-12829636"/>
-          <borderPainted value="false"/>
-          <enabled value="false"/>
-          <focusPainted value="false"/>
-          <foreground color="-1"/>
-          <text resource-bundle="lang" key="app.send"/>
-        </properties>
-      </component>
       <scrollpane id="24110" binding="messagesScrollPane">
         <constraints>
-          <grid row="0" column="4" row-span="2" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="4" row-span="2" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <background color="-12829636"/>
@@ -134,7 +118,7 @@
       </component>
       <scrollpane id="78bbc" binding="messageAreaScrollPane">
         <constraints>
-          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <background color="-12829636"/>
@@ -144,17 +128,11 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="df56a" class="javax.swing.JTextPane" binding="messageArea">
+          <component id="7e85d" class="com.github.jacekpoz.client.desktop.gui.MessageSender" binding="messageSender" custom-create="true">
             <constraints/>
             <properties>
               <background color="-12829636"/>
-              <caretColor color="-1"/>
-              <contentType value="text/plain"/>
-              <editable value="true"/>
-              <enabled value="false"/>
               <foreground color="-1"/>
-              <margin top="0" left="0" bottom="0" right="0"/>
-              <opaque value="true"/>
             </properties>
           </component>
         </children>
