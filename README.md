@@ -18,5 +18,10 @@ what the fuck man come on just use it you'll figure it out it should be intuitiv
 ## Contributing
 the client code is spaghetti right now so if anyone does a pull request I'll pull that bitch like the rope in tug of war
 
+## Credits
+[me](https://github.com/jacekpoz) - coding most of this
+
+[krizej](https://github.com/krizej) - help with coding the GUI and made the icons (they're great)
+
 ## License
 [GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/)
