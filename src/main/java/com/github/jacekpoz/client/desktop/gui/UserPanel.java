@@ -84,7 +84,7 @@ public class UserPanel extends JPanel {
                 });
                 break;
             case REQUEST:
-                button1 = new JButton(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/add_friend.png"))));
+                button1 = new JButton(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/accept.png"))));
                 button1.addActionListener(a -> {
                     clientUser.addFriend(panelUser);
                     window.send(new AcceptFriendRequestQuery(
@@ -95,7 +95,7 @@ public class UserPanel extends JPanel {
                     LOGGER.log(Level.INFO, "Accepted friend request", panelUser);
                     removeThis();
                 });
-                button2 = new JButton(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/delete_friend.png"))));
+                button2 = new JButton(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/decline.png"))));
                 button2.addActionListener(a -> {
                     window.send(new DenyFriendRequestQuery(
                             panelUser.getUserID(),
