@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,14 +35,22 @@ public class RegisterScreen implements Screen {
     private transient JLabel passwordLabel;
     private transient JLabel nicknameLabel;
     private JButton settingsButton;
+    private JLabel repeatPasswordLabel;
+    private JPasswordField repeatPasswordField;
 
     public RegisterScreen(ChatWindow w) {
         window = w;
 
         nicknameField.addActionListener(e -> SwingUtilities.invokeLater(passwordField::requestFocusInWindow));
-        ActionListener al = e -> register(nicknameField.getText(), passwordField.getPassword());
-        passwordField.addActionListener(al);
-        registerButton.addActionListener(al);
+        passwordField.addActionListener(e -> SwingUtilities.invokeLater(repeatPasswordField::requestFocusInWindow));
+
+        ActionListener registerListener = e -> register(
+                nicknameField.getText(),
+                passwordField.getPassword(),
+                repeatPasswordField.getPassword()
+        );
+        repeatPasswordField.addActionListener(registerListener);
+        registerButton.addActionListener(registerListener);
         loginButton.addActionListener(e -> window.setScreen(window.getLoginScreen()));
 
         settingsButton.addActionListener(e -> {
@@ -50,10 +59,14 @@ public class RegisterScreen implements Screen {
         });
     }
 
-    private void register(String username, char[] password) {
+    private void register(String username, char[] password, char[] repeatedPassword) {
 
-        if (username.isEmpty() || password.length == 0) {
+        if (username.isEmpty() || password.length == 0 || repeatedPassword.length == 0) {
             result.setText(window.getLangString("app.input_name_and_password"));
+            return;
+        }
+        if (!Arrays.equals(password, repeatedPassword)) {
+            result.setText(window.getLangString("app.passwords_not_equal"));
             return;
         }
 
@@ -121,6 +134,7 @@ public class RegisterScreen implements Screen {
     public void changeLanguage() {
         nicknameLabel.setText(window.getLangString("app.nickname"));
         passwordLabel.setText(window.getLangString("app.password"));
+        repeatPasswordLabel.setText(window.getLangString("app.repeat_password"));
         registerButton.setText(window.getLangString("app.register"));
         loginButton.setText(window.getLangString("app.go_to_login"));
 
