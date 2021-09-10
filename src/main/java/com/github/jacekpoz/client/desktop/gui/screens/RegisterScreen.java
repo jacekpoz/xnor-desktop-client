@@ -1,6 +1,6 @@
 package com.github.jacekpoz.client.desktop.gui.screens;
 
-import com.github.jacekpoz.client.desktop.gui.ChatWindow;
+import com.github.jacekpoz.client.desktop.gui.XnorWindow;
 import com.github.jacekpoz.client.desktop.gui.Screen;
 import com.github.jacekpoz.common.sendables.Sendable;
 import com.github.jacekpoz.common.sendables.database.queries.user.RegisterQuery;
@@ -24,7 +24,7 @@ public class RegisterScreen implements Screen {
 
     private final static Logger LOGGER = Logger.getLogger(RegisterScreen.class.getName());
 
-    private transient final ChatWindow window;
+    private transient final XnorWindow window;
 
     private transient JPanel registerScreen;
     private transient JTextField nicknameField;
@@ -38,7 +38,7 @@ public class RegisterScreen implements Screen {
     private JLabel repeatPasswordLabel;
     private JPasswordField repeatPasswordField;
 
-    public RegisterScreen(ChatWindow w) {
+    public RegisterScreen(XnorWindow w) {
         window = w;
 
         nicknameField.addActionListener(e -> SwingUtilities.invokeLater(passwordField::requestFocusInWindow));

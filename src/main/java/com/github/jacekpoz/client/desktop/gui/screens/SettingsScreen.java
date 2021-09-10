@@ -1,6 +1,6 @@
 package com.github.jacekpoz.client.desktop.gui.screens;
 
-import com.github.jacekpoz.client.desktop.gui.ChatWindow;
+import com.github.jacekpoz.client.desktop.gui.XnorWindow;
 import com.github.jacekpoz.client.desktop.gui.Screen;
 import com.github.jacekpoz.common.sendables.Sendable;
 import com.github.jacekpoz.common.sendables.database.queries.user.DeleteUserQuery;
@@ -23,7 +23,7 @@ public class SettingsScreen implements Screen {
 
     private final static Logger LOGGER = Logger.getLogger(SettingsScreen.class.getName());
 
-    private final ChatWindow window;
+    private final XnorWindow window;
 
     private JPanel settingsScreen;
     private JComboBox<Locale> languageComboBox;
@@ -40,7 +40,7 @@ public class SettingsScreen implements Screen {
 
     private Locale lang;
 
-    public SettingsScreen(ChatWindow w) {
+    public SettingsScreen(XnorWindow w) {
         window = w;
         languageComboBox.addItem(Locale.US);
         languageComboBox.addItem(new Locale("pl", "PL"));

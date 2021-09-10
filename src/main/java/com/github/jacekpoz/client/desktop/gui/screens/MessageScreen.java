@@ -11,20 +11,10 @@ import com.github.jacekpoz.common.sendables.database.results.ChatResult;
 import com.github.jacekpoz.common.sendables.database.results.UserResult;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import org.apache.commons.io.FilenameUtils;
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.io.*;
-import java.lang.reflect.Method;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.*;
 import java.util.logging.Level;
@@ -34,7 +24,7 @@ public class MessageScreen implements Screen {
 
     private final static Logger LOGGER = Logger.getLogger(MessageScreen.class.getName());
 
-    private transient final ChatWindow window;
+    private transient final XnorWindow window;
 
     private transient JPanel messageScreen;
     private transient JButton chatsButton;
@@ -54,7 +44,7 @@ public class MessageScreen implements Screen {
 
     private EmbeddedMediaPlayerComponent empc;
 
-    public MessageScreen(ChatWindow w) {
+    public MessageScreen(XnorWindow w) {
         window = w;
         usersChats = new ArrayList<>();
         usersInChats = new HashMap<>();

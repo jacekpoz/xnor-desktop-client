@@ -22,7 +22,7 @@ public class UserPanel extends JPanel {
     public static final int FRIEND = 1;
     public static final int REQUEST = 2;
 
-    private final ChatWindow window;
+    private final XnorWindow window;
     private final JPanel addedTo;
     @Getter
     private final User clientUser;
@@ -34,7 +34,7 @@ public class UserPanel extends JPanel {
     private JButton button1;
     private JButton button2;
 
-    public UserPanel(ChatWindow w, JPanel jp, User u, User pU, int type) {
+    public UserPanel(XnorWindow w, JPanel jp, User u, User pU, int type) {
         window = w;
         addedTo = jp;
         clientUser = u;

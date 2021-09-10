@@ -1,6 +1,6 @@
 package com.github.jacekpoz.client.desktop;
 
-import com.github.jacekpoz.client.desktop.gui.ChatWindow;
+import com.github.jacekpoz.client.desktop.gui.XnorWindow;
 import com.github.jacekpoz.common.sendables.Chat;
 import com.github.jacekpoz.common.sendables.Message;
 import com.github.jacekpoz.common.sendables.Sendable;
@@ -12,9 +12,9 @@ import java.util.concurrent.Executors;
 public class InputHandler {
 
 
-    private final ChatWindow window;
+    private final XnorWindow window;
 
-    public InputHandler(ChatWindow w) {
+    public InputHandler(XnorWindow w) {
         window = w;
     }
 

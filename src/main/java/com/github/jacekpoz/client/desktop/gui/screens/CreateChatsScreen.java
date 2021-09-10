@@ -1,6 +1,6 @@
 package com.github.jacekpoz.client.desktop.gui.screens;
 
-import com.github.jacekpoz.client.desktop.gui.ChatWindow;
+import com.github.jacekpoz.client.desktop.gui.XnorWindow;
 import com.github.jacekpoz.client.desktop.gui.Screen;
 import com.github.jacekpoz.common.sendables.Sendable;
 import com.github.jacekpoz.common.sendables.User;
@@ -25,7 +25,7 @@ public class CreateChatsScreen implements Screen {
 
     private final static Logger LOGGER = Logger.getLogger(CreateChatsScreen.class.getName());
 
-    private transient final ChatWindow window;
+    private transient final XnorWindow window;
 
     private List<User> friends;
 
@@ -44,7 +44,7 @@ public class CreateChatsScreen implements Screen {
     private transient final DefaultListModel<User> friendsListModel;
     private transient final DefaultListModel<User> addedFriendsListModel;
 
-    public CreateChatsScreen(ChatWindow w) {
+    public CreateChatsScreen(XnorWindow w) {
         window = w;
 
         friends = new ArrayList<>();

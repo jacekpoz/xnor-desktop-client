@@ -1,6 +1,6 @@
 package com.github.jacekpoz.client.desktop;
 
-import com.github.jacekpoz.client.desktop.gui.ChatWindow;
+import com.github.jacekpoz.client.desktop.gui.XnorWindow;
 import com.github.jacekpoz.common.sendables.Chat;
 import com.github.jacekpoz.common.sendables.User;
 import lombok.Getter;
@@ -15,7 +15,7 @@ public class XnorDesktopClient {
     @Getter
     private final Socket socket;
     @Getter
-    private final ChatWindow window;
+    private final XnorWindow window;
     @Getter @Setter
     private User user;
     @Getter @Setter
@@ -31,7 +31,7 @@ public class XnorDesktopClient {
         socket = s;
         this.isOnline = isOnline;
         this.isVLCAvailable = isVLCAvailable;
-        window = new ChatWindow(this);
+        window = new XnorWindow(this);
         user = new User(-1, "dupa", "dupa dupa", LocalDateTime.MIN);
         chat = new Chat(-1, "dupa", LocalDateTime.MIN, -1);
     }
