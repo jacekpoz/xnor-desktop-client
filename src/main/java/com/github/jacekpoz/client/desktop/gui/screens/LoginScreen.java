@@ -1,6 +1,6 @@
 package com.github.jacekpoz.client.desktop.gui.screens;
 
-import com.github.jacekpoz.client.desktop.gui.ChatWindow;
+import com.github.jacekpoz.client.desktop.gui.XnorWindow;
 import com.github.jacekpoz.client.desktop.gui.Screen;
 import com.github.jacekpoz.common.sendables.Sendable;
 import com.github.jacekpoz.common.sendables.User;
@@ -22,7 +22,7 @@ public class LoginScreen implements Screen {
 
     private final static Logger LOGGER = Logger.getLogger(LoginScreen.class.getName());
 
-    private transient final ChatWindow window;
+    private transient final XnorWindow window;
 
     private transient JPanel loginScreen;
     private transient JTextField nicknameField;
@@ -34,7 +34,7 @@ public class LoginScreen implements Screen {
     private transient JLabel passwordLabel;
     private JButton settingsButton;
 
-    public LoginScreen(ChatWindow w) {
+    public LoginScreen(XnorWindow w) {
         window = w;
         nicknameField.addActionListener(e -> SwingUtilities.invokeLater(passwordField::requestFocusInWindow));
         ActionListener al = e -> login(nicknameField.getText(), passwordField.getPassword());

@@ -22,10 +22,10 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.*;
 
-public class ChatWindow extends JFrame {
+public class XnorWindow extends JFrame {
 
     private final static Logger ROOT_LOGGER = LogManager.getLogManager().getLogger("");
-    private final static Logger LOGGER = Logger.getLogger(ChatWindow.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(XnorWindow.class.getName());
 
     @Getter
     private PrintWriter out;
@@ -74,7 +74,7 @@ public class ChatWindow extends JFrame {
     @Setter
     private Screen currentScreen;
 
-    public ChatWindow(XnorDesktopClient c) {
+    public XnorWindow(XnorDesktopClient c) {
         client = c;
 
         languageBundle = ResourceBundle.getBundle("lang");
@@ -105,6 +105,7 @@ public class ChatWindow extends JFrame {
         changeLanguage(Locale.US);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setIconImage(new ImageIcon("src/main/resources/images/logo/xnor_icon.png").getImage());
         setMinimumSize(new Dimension(800, 600));
 
         lastScreen = loginScreen;

@@ -1,6 +1,6 @@
 package com.github.jacekpoz.client.desktop.gui.screens;
 
-import com.github.jacekpoz.client.desktop.gui.ChatWindow;
+import com.github.jacekpoz.client.desktop.gui.XnorWindow;
 import com.github.jacekpoz.client.desktop.gui.Screen;
 import com.github.jacekpoz.client.desktop.gui.UserPanel;
 import com.github.jacekpoz.common.Util;
@@ -28,7 +28,7 @@ public class FriendsScreen implements Screen {
 
     private final static Logger LOGGER = Logger.getLogger(FriendsScreen.class.getName());
 
-    private transient final ChatWindow window;
+    private transient final XnorWindow window;
 
     private transient JPanel friendsScreen;
     private transient JTabbedPane pane;
@@ -49,7 +49,7 @@ public class FriendsScreen implements Screen {
     private List<User> friendRequests;
     private List<User> allUsers;
 
-    public FriendsScreen(ChatWindow w) {
+    public FriendsScreen(XnorWindow w) {
         window = w;
         friends = new ArrayList<>();
         friendRequests = new ArrayList<>();

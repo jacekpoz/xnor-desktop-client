@@ -4,20 +4,17 @@ import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 
 public class MessageContainer extends JPanel {
 
-    private final ChatWindow window;
+    private final XnorWindow window;
 
     @Getter
     private final JLabel noMessages;
 
-    public MessageContainer(ChatWindow w) {
+    public MessageContainer(XnorWindow w) {
         window = w;
         setBackground(new Color(60, 60, 60));
         setForeground(Color.WHITE);

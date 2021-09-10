@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class MessageSender extends JPanel {
-    private final ChatWindow window;
+    private final XnorWindow window;
 
     private long attachmentCounter;
     private final List<Attachment> attachments;
@@ -30,7 +30,7 @@ public class MessageSender extends JPanel {
     private JTextPane textPane;
     private JButton sendMessageButton;
 
-    public MessageSender(ChatWindow w) {
+    public MessageSender(XnorWindow w) {
         window = w;
         attachmentCounter = 0;
         attachments = new ArrayList<>();
