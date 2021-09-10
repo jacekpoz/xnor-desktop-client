@@ -1,10 +1,10 @@
 package com.github.jacekpoz.client.desktop.gui;
 
 import com.github.jacekpoz.common.sendables.User;
-import com.github.jacekpoz.common.sendables.database.queries.user.AcceptFriendRequestQuery;
-import com.github.jacekpoz.common.sendables.database.queries.user.DenyFriendRequestQuery;
-import com.github.jacekpoz.common.sendables.database.queries.user.RemoveFriendQuery;
-import com.github.jacekpoz.common.sendables.database.queries.user.SendFriendRequestQuery;
+import com.github.jacekpoz.common.sendables.database.queries.FriendRequestQuery;
+import com.github.jacekpoz.common.sendables.database.queries.FriendRequestQueryEnum;
+import com.github.jacekpoz.common.sendables.database.queries.UserQuery;
+import com.github.jacekpoz.common.sendables.database.queries.UserQueryEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -61,11 +61,13 @@ public class UserPanel extends JPanel {
             case NOT_FRIEND:
                 button1 = new JButton(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/add_friend.png"))));
                 button1.addActionListener(a -> {
-                    window.send(new SendFriendRequestQuery(
-                            clientUser.getUserID(),
-                            panelUser.getUserID(),
-                            window.getFriendsScreen().getScreenID())
-                    );
+                    FriendRequestQuery send = new FriendRequestQuery(
+                            false,
+                            window.getFriendsScreen().getScreenID(),
+                            FriendRequestQueryEnum.SEND_FRIEND_REQUEST);
+                    send.putValue("senderID", clientUser.getUserID());
+                    send.putValue("receiverID", panelUser.getUserID());
+                    window.send(send);
                     LOGGER.log(Level.INFO, "Sent friend request", panelUser);
                     removeThis();
                 });
@@ -74,11 +76,13 @@ public class UserPanel extends JPanel {
                 button1 = new JButton(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/delete_friend.png"))));
                 button1.addActionListener(a -> {
                     clientUser.removeFriend(panelUser);
-                    window.send(new RemoveFriendQuery(
-                            clientUser.getUserID(),
-                            panelUser.getUserID(),
-                            window.getFriendsScreen().getScreenID())
-                    );
+                    UserQuery remove = new UserQuery(
+                            true,
+                            window.getFriendsScreen().getScreenID(),
+                            UserQueryEnum.REMOVE_FRIEND);
+                    remove.putValue("userID", clientUser.getUserID());
+                    remove.putValue("friendID", panelUser.getUserID());
+                    window.send(remove);
                     LOGGER.log(Level.INFO, "Removed friend", panelUser);
                     removeThis();
                 });
@@ -87,21 +91,27 @@ public class UserPanel extends JPanel {
                 button1 = new JButton(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/accept.png"))));
                 button1.addActionListener(a -> {
                     clientUser.addFriend(panelUser);
-                    window.send(new AcceptFriendRequestQuery(
-                            panelUser.getUserID(),
-                            clientUser.getUserID(),
-                            window.getFriendsScreen().getScreenID()
-                    ));
+                    FriendRequestQuery accept = new FriendRequestQuery(
+                            true,
+                            window.getFriendsScreen().getScreenID(),
+                            FriendRequestQueryEnum.ACCEPT_FRIEND_REQUEST
+                    );
+                    accept.putValue("senderID", panelUser.getUserID());
+                    accept.putValue("receiverID", clientUser.getUserID());
+                    window.send(accept);
                     LOGGER.log(Level.INFO, "Accepted friend request", panelUser);
                     removeThis();
                 });
                 button2 = new JButton(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/decline.png"))));
                 button2.addActionListener(a -> {
-                    window.send(new DenyFriendRequestQuery(
-                            panelUser.getUserID(),
-                            clientUser.getUserID(),
-                            window.getFriendsScreen().getScreenID()
-                    ));
+                    FriendRequestQuery deny = new FriendRequestQuery(
+                            false,
+                            window.getFriendsScreen().getScreenID(),
+                            FriendRequestQueryEnum.DENY_FRIEND_REQUEST
+                    );
+                    deny.putValue("senderID", panelUser.getUserID());
+                    deny.putValue("receiverID", clientUser.getUserID());
+                    window.send(deny);
                     LOGGER.log(Level.INFO, "Denied friend request", panelUser);
                     removeThis();
                 });

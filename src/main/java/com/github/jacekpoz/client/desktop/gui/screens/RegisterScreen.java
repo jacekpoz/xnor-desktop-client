@@ -3,17 +3,22 @@ package com.github.jacekpoz.client.desktop.gui.screens;
 import com.github.jacekpoz.client.desktop.gui.XnorWindow;
 import com.github.jacekpoz.client.desktop.gui.Screen;
 import com.github.jacekpoz.common.sendables.Sendable;
-import com.github.jacekpoz.common.sendables.database.queries.user.RegisterQuery;
+import com.github.jacekpoz.common.sendables.database.queries.UserQuery;
+import com.github.jacekpoz.common.sendables.database.queries.UserQueryEnum;
 import com.github.jacekpoz.common.sendables.database.results.RegisterResult;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,7 +87,14 @@ public class RegisterScreen implements Screen {
                 .password(new String(password).getBytes(StandardCharsets.UTF_8))
                 .encodedHash();
 
-        window.send(new RegisterQuery(username, hash, getScreenID()));
+        UserQuery register = new UserQuery(
+                false,
+                getScreenID(),
+                UserQueryEnum.REGISTER
+        );
+        register.putValue("username", username);
+        register.putValue("hash", hash);
+        window.send(register);
     }
 
     @Override
@@ -158,59 +170,101 @@ public class RegisterScreen implements Screen {
      */
     private void $$$setupUI$$$() {
         registerScreen = new JPanel();
-        registerScreen.setLayout(new GridLayoutManager(8, 1, new Insets(0, 0, 0, 0), -1, -1));
+        registerScreen.setLayout(new GridLayoutManager(12, 1, new Insets(0, 0, 0, 0), -1, -1));
         registerScreen.setBackground(new Color(-12829636));
         registerScreen.setForeground(new Color(-12829636));
         nicknameLabel = new JLabel();
         nicknameLabel.setBackground(new Color(-12829636));
         nicknameLabel.setForeground(new Color(-1));
         this.$$$loadLabelText$$$(nicknameLabel, this.$$$getMessageFromBundle$$$("lang", "app.nickname"));
-        registerScreen.add(nicknameLabel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        registerScreen.add(nicknameLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         nicknameField = new JTextField();
         nicknameField.setBackground(new Color(-12829636));
         nicknameField.setCaretColor(new Color(-1));
         nicknameField.setForeground(new Color(-1));
-        registerScreen.add(nicknameField, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
+        registerScreen.add(nicknameField, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(200, -1), null, 0, false));
         passwordLabel = new JLabel();
         passwordLabel.setBackground(new Color(-12829636));
         passwordLabel.setForeground(new Color(-1));
         this.$$$loadLabelText$$$(passwordLabel, this.$$$getMessageFromBundle$$$("lang", "app.password"));
-        registerScreen.add(passwordLabel, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        registerScreen.add(passwordLabel, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         registerButton = new JButton();
-        registerButton.setBackground(new Color(-12829636));
+        registerButton.setBackground(new Color(-11513776));
         registerButton.setBorderPainted(false);
         registerButton.setFocusPainted(false);
         registerButton.setForeground(new Color(-1));
         this.$$$loadButtonText$$$(registerButton, this.$$$getMessageFromBundle$$$("lang", "app.register"));
-        registerScreen.add(registerButton, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        registerScreen.add(registerButton, new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
         loginButton = new JButton();
-        loginButton.setBackground(new Color(-12829636));
+        loginButton.setBackground(new Color(-11513776));
         loginButton.setBorderPainted(false);
         loginButton.setFocusPainted(false);
         loginButton.setForeground(new Color(-1));
         this.$$$loadButtonText$$$(loginButton, this.$$$getMessageFromBundle$$$("lang", "app.go_to_login"));
-        registerScreen.add(loginButton, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        registerScreen.add(loginButton, new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
         result = new JLabel();
         result.setBackground(new Color(-12829636));
         result.setForeground(new Color(-1));
         result.setText("");
-        registerScreen.add(result, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        registerScreen.add(result, new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 26), null, 0, false));
         passwordField = new JPasswordField();
         passwordField.setBackground(new Color(-12829636));
         passwordField.setCaretColor(new Color(-1));
         passwordField.setForeground(new Color(-1));
-        registerScreen.add(passwordField, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
+        registerScreen.add(passwordField, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(200, -1), null, 0, false));
+        final JLabel label1 = new JLabel();
+        Font label1Font = this.$$$getFont$$$("Tw Cen MT Condensed Extra Bold", -1, 28, label1.getFont());
+        if (label1Font != null) label1.setFont(label1Font);
+        label1.setForeground(new Color(-16777216));
+        label1.setHorizontalAlignment(10);
+        label1.setHorizontalTextPosition(11);
+        label1.setIcon(new ImageIcon(getClass().getResource("/images/logo/xnor_small.png")));
+        label1.setText("XNOR");
+        label1.setVerticalAlignment(0);
+        label1.setVerticalTextPosition(3);
+        registerScreen.add(label1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         settingsButton = new JButton();
-        settingsButton.setBackground(new Color(-12829636));
+        settingsButton.setBackground(new Color(-11513776));
         settingsButton.setBorderPainted(false);
         settingsButton.setFocusPainted(false);
         settingsButton.setForeground(new Color(-1));
         settingsButton.setHorizontalTextPosition(0);
         settingsButton.setIcon(new ImageIcon(getClass().getResource("/images/settings.png")));
         settingsButton.setText("");
-        registerScreen.add(settingsButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(30, 30), 0, false));
+        registerScreen.add(settingsButton, new GridConstraints(11, 0, 1, 1, GridConstraints.ANCHOR_SOUTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(30, 30), 0, false));
+        final Spacer spacer1 = new Spacer();
+        registerScreen.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(11, 33), null, 0, false));
+        repeatPasswordField = new JPasswordField();
+        repeatPasswordField.setBackground(new Color(-12829636));
+        registerScreen.add(repeatPasswordField, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(200, -1), null, 0, false));
+        repeatPasswordLabel = new JLabel();
+        repeatPasswordLabel.setText("");
+        registerScreen.add(repeatPasswordLabel, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         nicknameLabel.setLabelFor(nicknameField);
         passwordLabel.setLabelFor(passwordField);
+        repeatPasswordLabel.setLabelFor(repeatPasswordField);
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
     private static Method $$$cachedGetBundleMethod$$$ = null;
@@ -290,4 +344,5 @@ public class RegisterScreen implements Screen {
     public JComponent $$$getRootComponent$$$() {
         return registerScreen;
     }
+
 }

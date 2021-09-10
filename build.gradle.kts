@@ -30,7 +30,7 @@ dependencies {
     implementation("net.java.dev.jna:jna-platform:5.9.0")
     implementation("uk.co.caprica:vlcj:4.7.1")
 
-    implementation("com.github.jacekpoz:xnor-lib:0.5.1")
+    implementation("com.github.jacekpoz:xnor-lib:0.5.2")
 }
 
 tasks {

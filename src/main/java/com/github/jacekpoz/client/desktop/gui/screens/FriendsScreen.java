@@ -4,11 +4,14 @@ import com.github.jacekpoz.client.desktop.gui.XnorWindow;
 import com.github.jacekpoz.client.desktop.gui.Screen;
 import com.github.jacekpoz.client.desktop.gui.UserPanel;
 import com.github.jacekpoz.common.Util;
+import com.github.jacekpoz.common.sendables.FriendRequest;
 import com.github.jacekpoz.common.sendables.Sendable;
 import com.github.jacekpoz.common.sendables.User;
-import com.github.jacekpoz.common.sendables.database.queries.user.GetAllUsersQuery;
-import com.github.jacekpoz.common.sendables.database.queries.user.GetFriendRequestsQuery;
-import com.github.jacekpoz.common.sendables.database.queries.user.GetFriendsQuery;
+import com.github.jacekpoz.common.sendables.database.queries.FriendRequestQuery;
+import com.github.jacekpoz.common.sendables.database.queries.FriendRequestQueryEnum;
+import com.github.jacekpoz.common.sendables.database.queries.UserQuery;
+import com.github.jacekpoz.common.sendables.database.queries.UserQueryEnum;
+import com.github.jacekpoz.common.sendables.database.results.FriendRequestResult;
 import com.github.jacekpoz.common.sendables.database.results.UserResult;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -46,7 +49,7 @@ public class FriendsScreen implements Screen {
     private transient JButton backToMessagesButton;
 
     private List<User> friends;
-    private List<User> friendRequests;
+    private List<FriendRequest> friendRequests;
     private List<User> allUsers;
 
     public FriendsScreen(XnorWindow w) {
@@ -90,9 +93,15 @@ public class FriendsScreen implements Screen {
         friendRequestsPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                addUsersToPanel(friendRequestsPane, friendRequests, UserPanel.REQUEST);
+                addFriendRequestsToPanel(friendRequestsPane, friendRequests, UserPanel.REQUEST);
             }
         });
+    }
+
+    private void addFriendRequestsToPanel(JPanel p, List<FriendRequest> requests, int type) {
+        List<User> senders = new ArrayList<>();
+        requests.forEach(fr -> senders.add(fr.getSender()));
+        addUsersToPanel(p, senders, type);
     }
 
     private void addUsersToPanel(JPanel p, List<User> users, int type) {
@@ -110,9 +119,28 @@ public class FriendsScreen implements Screen {
 
     @Override
     public void update() {
-        window.send(new GetFriendsQuery(window.getClient().getUser().getUserID(), getScreenID()));
-        window.send(new GetFriendRequestsQuery(window.getClient().getUser().getUserID(), getScreenID()));
-        window.send(new GetAllUsersQuery(getScreenID()));
+        UserQuery getFriends = new UserQuery(
+                false,
+                getScreenID(),
+                UserQueryEnum.GET_FRIENDS
+        );
+        getFriends.putValue("userID", window.getClient().getUser().getUserID());
+        window.send(getFriends);
+
+        FriendRequestQuery getFriendRequests = new FriendRequestQuery(
+                false,
+                getScreenID(),
+                FriendRequestQueryEnum.GET_FRIEND_REQUESTS
+        );
+        getFriendRequests.putValue("userID", window.getClient().getUser().getUserID());
+        window.send(getFriendRequests);
+
+        UserQuery getAllUsers = new UserQuery(
+                false,
+                getScreenID(),
+                UserQueryEnum.GET_ALL_USERS
+        );
+        window.send(getAllUsers);
     }
 
     @Override
@@ -120,23 +148,28 @@ public class FriendsScreen implements Screen {
         friendsList.removeAll();
         friendRequestsPane.removeAll();
         addUsersToPanel(friendsList, friends, UserPanel.FRIEND);
-        addUsersToPanel(friendRequestsPane, friendRequests, UserPanel.REQUEST);
+        addFriendRequestsToPanel(friendRequestsPane, friendRequests, UserPanel.REQUEST);
     }
 
     @Override
     public void handleSendable(Sendable s) {
         if (s instanceof UserResult) {
             UserResult ur = (UserResult) s;
-            if (ur.getQuery() instanceof GetFriendsQuery) {
+            UserQuery uq = ur.getQuery();
+            if (uq.getQueryType() == UserQueryEnum.GET_FRIENDS) {
                 friends = ur.get();
                 addUsersToPanel(friendsList, friends, UserPanel.FRIEND);
-            } else if (ur.getQuery() instanceof GetFriendRequestsQuery) {
-                friendRequests = ur.get();
-                addUsersToPanel(friendRequestsPane, friendRequests, UserPanel.REQUEST);
-            } else if (ur.getQuery() instanceof GetAllUsersQuery) {
+            } else if (uq.getQueryType() == UserQueryEnum.GET_ALL_USERS) {
                 allUsers = ur.get();
             }
             updateUI();
+        } else if (s instanceof FriendRequestResult) {
+            FriendRequestResult frr = (FriendRequestResult) s;
+            FriendRequestQuery frq = frr.getQuery();
+            if (frq.getQueryType() == FriendRequestQueryEnum.GET_FRIEND_REQUESTS) {
+                friendRequests = frr.get();
+                addFriendRequestsToPanel(friendRequestsPane, friendRequests, UserPanel.REQUEST);
+            }
         }
     }
 

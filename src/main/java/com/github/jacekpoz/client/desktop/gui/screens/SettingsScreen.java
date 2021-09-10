@@ -3,7 +3,8 @@ package com.github.jacekpoz.client.desktop.gui.screens;
 import com.github.jacekpoz.client.desktop.gui.XnorWindow;
 import com.github.jacekpoz.client.desktop.gui.Screen;
 import com.github.jacekpoz.common.sendables.Sendable;
-import com.github.jacekpoz.common.sendables.database.queries.user.DeleteUserQuery;
+import com.github.jacekpoz.common.sendables.database.queries.UserQuery;
+import com.github.jacekpoz.common.sendables.database.queries.UserQueryEnum;
 import com.github.jacekpoz.common.sendables.database.results.UserResult;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -87,7 +88,13 @@ public class SettingsScreen implements Screen {
                     null
             );
             if (result == JOptionPane.YES_OPTION) {
-                window.send(new DeleteUserQuery(window.getClient().getUser().getUserID(), getScreenID()));
+                UserQuery delete = new UserQuery(
+                        false,
+                        getScreenID(),
+                        UserQueryEnum.DELETE_USER
+                );
+                delete.putValue("userID", window.getClient().getUser().getUserID());
+                window.send(delete);
                 window.logout();
             }
         });
@@ -127,7 +134,7 @@ public class SettingsScreen implements Screen {
     public void handleSendable(Sendable s) {
         if (s instanceof UserResult) {
             UserResult ur = (UserResult) s;
-            if (ur.getQuery() instanceof DeleteUserQuery) {
+            if (ur.getQuery().getQueryType() == UserQueryEnum.DELETE_USER) {
                 LOGGER.log(Level.INFO, "Account deleted", ur.get().get(0));
             }
         }

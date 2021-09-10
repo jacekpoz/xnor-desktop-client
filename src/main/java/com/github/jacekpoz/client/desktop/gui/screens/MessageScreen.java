@@ -3,10 +3,7 @@ package com.github.jacekpoz.client.desktop.gui.screens;
 import com.github.jacekpoz.client.desktop.gui.*;
 import com.github.jacekpoz.common.Util;
 import com.github.jacekpoz.common.sendables.*;
-import com.github.jacekpoz.common.sendables.database.queries.chat.GetUsersChatsQuery;
-import com.github.jacekpoz.common.sendables.database.queries.message.InsertMessageQuery;
-import com.github.jacekpoz.common.sendables.database.queries.user.GetMessageAuthorQuery;
-import com.github.jacekpoz.common.sendables.database.queries.user.GetUsersInChatQuery;
+import com.github.jacekpoz.common.sendables.database.queries.*;
 import com.github.jacekpoz.common.sendables.database.results.ChatResult;
 import com.github.jacekpoz.common.sendables.database.results.UserResult;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -41,8 +38,6 @@ public class MessageScreen implements Screen {
     private List<Chat> usersChats;
     private Map<Chat, List<User>> usersInChats;
     private Map<Message, User> messageAuthors;
-
-    private EmbeddedMediaPlayerComponent empc;
 
     public MessageScreen(XnorWindow w) {
         window = w;
@@ -86,15 +81,18 @@ public class MessageScreen implements Screen {
         chats.revalidate();
     }
 
-    private void sendMessage(Message message) {
-        window.send(message);
-        window.send(new InsertMessageQuery(
-                message.getMessageID(),
-                message.getChatID(),
-                message.getAuthorID(),
-                message.getContent(),
-                getScreenID()
-        ));
+    private void sendMessage(Message m) {
+        window.send(m);
+        MessageQuery send = new MessageQuery(
+                false,
+                getScreenID(),
+                MessageQueryEnum.INSERT_MESSAGE
+        );
+        send.putValue("messageID", m.getMessageID());
+        send.putValue("chatID", m.getChatID());
+        send.putValue("authorID", m.getAuthorID());
+        send.putValue("content", m.getContent());
+        window.send(send);
     }
 
     public void setChat(Chat c) {
@@ -125,14 +123,22 @@ public class MessageScreen implements Screen {
 
     private void updateUsersChats() {
         for (Chat c : usersChats) {
-            window.send(new GetUsersInChatQuery(c.getChatID(), getScreenID()));
+            UserQuery getUsersInChat = new UserQuery(
+                    false,
+                    getScreenID(),
+                    UserQueryEnum.GET_USERS_IN_CHAT
+            );
+            getUsersInChat.putValue("chatID", c.getChatID());
+            window.send(getUsersInChat);
             for (Message m : c.getMessages()) {
-                window.send(new GetMessageAuthorQuery(
-                        m.getMessageID(),
-                        m.getChatID(),
-                        m.getAuthorID(),
-                        getScreenID()
-                ));
+                UserQuery messageAuthor = new UserQuery(
+                        false,
+                        getScreenID(),
+                        UserQueryEnum.GET_MESSAGE_AUTHOR
+                );
+                messageAuthor.putValue("messageID", m.getMessageID());
+                messageAuthor.putValue("chatID", m.getChatID());
+                window.send(messageAuthor);
             }
         }
     }
@@ -144,7 +150,13 @@ public class MessageScreen implements Screen {
         } catch (ConcurrentModificationException ignored) {
         }
         if (window.getClient().isLoggedIn()) {
-            window.send(new GetUsersChatsQuery(window.getClient().getUser().getUserID(), getScreenID()));
+            ChatQuery usersChats = new ChatQuery(
+                    false,
+                    getScreenID(),
+                    ChatQueryEnum.GET_USERS_CHATS
+            );
+            usersChats.putValue("userID", window.getClient().getUser().getUserID());
+            window.send(usersChats);
         }
         updateUsersChats();
     }
@@ -160,24 +172,23 @@ public class MessageScreen implements Screen {
     public void handleSendable(Sendable s) {
         if (s instanceof ChatResult) {
             ChatResult cr = (ChatResult) s;
-            if (cr.getQuery() instanceof GetUsersChatsQuery) {
+            if (cr.getQuery().getQueryType() == ChatQueryEnum.GET_USERS_CHATS) {
                 usersChats = cr.get();
                 updateUI();
                 updateUsersChats();
             }
         } else if (s instanceof UserResult) {
             UserResult ur = (UserResult) s;
-            if (ur.getQuery() instanceof GetMessageAuthorQuery) {
-                GetMessageAuthorQuery gmaq = (GetMessageAuthorQuery) ur.getQuery();
+            UserQuery uq = ur.getQuery();
+            if (uq.getQueryType() == UserQueryEnum.GET_MESSAGE_AUTHOR) {
                 for (Chat c : usersChats)
-                    if (c.getChatID() == gmaq.getChatID())
+                    if (c.getChatID() == uq.getValue("chatID", long.class))
                         for (Message m : c.getMessages())
-                            if (m.getMessageID() == gmaq.getMessageID())
+                            if (m.getMessageID() == uq.getValue("messageID", long.class))
                                 messageAuthors.put(m, ur.get(0));
-            } else if (ur.getQuery() instanceof GetUsersInChatQuery) {
-                GetUsersInChatQuery guicq = (GetUsersInChatQuery) ur.getQuery();
+            } else if (uq.getQueryType() == UserQueryEnum.GET_USERS_IN_CHAT) {
                 for (Chat c : usersChats) {
-                    if (c.getChatID() == guicq.getChatID()) {
+                    if (c.getChatID() == uq.getValue("chatID", long.class)) {
                         usersInChats.put(c, ur.get());
                         return;
                     }

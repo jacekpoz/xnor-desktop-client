@@ -4,8 +4,10 @@ import com.github.jacekpoz.client.desktop.gui.XnorWindow;
 import com.github.jacekpoz.client.desktop.gui.Screen;
 import com.github.jacekpoz.common.sendables.Sendable;
 import com.github.jacekpoz.common.sendables.User;
-import com.github.jacekpoz.common.sendables.database.queries.chat.InsertChatQuery;
-import com.github.jacekpoz.common.sendables.database.queries.user.GetFriendsQuery;
+import com.github.jacekpoz.common.sendables.database.queries.ChatQuery;
+import com.github.jacekpoz.common.sendables.database.queries.ChatQueryEnum;
+import com.github.jacekpoz.common.sendables.database.queries.UserQuery;
+import com.github.jacekpoz.common.sendables.database.queries.UserQueryEnum;
 import com.github.jacekpoz.common.sendables.database.results.ChatResult;
 import com.github.jacekpoz.common.sendables.database.results.UserResult;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -104,13 +106,16 @@ public class CreateChatsScreen implements Screen {
                 chatName = sb.toString();
             }
 
-            window.send(new InsertChatQuery(
-                    chatName,
-                    users.stream()
-                            .map(User::getUserID)
-                            .collect(Collectors.toList()),
-                    getScreenID())
+            ChatQuery newChat = new ChatQuery(
+                    true,
+                    getScreenID(),
+                    ChatQueryEnum.INSERT_CHAT
             );
+            newChat.putValue("chatName", chatName);
+            newChat.putValue("memberIDs", users.stream()
+                    .map(User::getUserID)
+                    .toArray());
+            window.send(newChat);
         });
     }
 
@@ -121,7 +126,13 @@ public class CreateChatsScreen implements Screen {
 
     @Override
     public void update() {
-        window.send(new GetFriendsQuery(window.getClient().getUser().getUserID(), getScreenID()));
+        UserQuery getFriends = new UserQuery(
+                false,
+                getScreenID(),
+                UserQueryEnum.GET_FRIENDS
+        );
+        getFriends.putValue("userID", window.getClient().getUser().getUserID());
+        window.send(getFriends);
     }
 
     @Override
@@ -138,13 +149,14 @@ public class CreateChatsScreen implements Screen {
     public void handleSendable(Sendable s) {
         if (s instanceof UserResult) {
             UserResult ur = (UserResult) s;
-            if (ur.getQuery() instanceof GetFriendsQuery) friends = ur.get();
+            UserQuery uq = ur.getQuery();
+            if (uq.getQueryType() == UserQueryEnum.GET_FRIENDS) friends = ur.get();
         } else if (s instanceof ChatResult) {
             ChatResult cr = (ChatResult) s;
-            if (cr.getQuery() instanceof InsertChatQuery) {
-                InsertChatQuery icq = (InsertChatQuery) cr.getQuery();
+            ChatQuery cq = cr.getQuery();
+            if (cq.getQueryType() == ChatQueryEnum.INSERT_CHAT) {
                 if (cr.getSuccess()) {
-                    LOGGER.log(Level.INFO, "Created chat", icq.getChatName());
+                    LOGGER.log(Level.INFO, "Created chat", cq.getValue("chatName", String.class));
                     window.getMessageScreen().addChat(cr.get(0));
                     window.setScreen(window.getMessageScreen());
                 }
