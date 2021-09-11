@@ -6,10 +6,13 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Locale;
 
 public class AttachmentPanel {
     private JPanel attachmentPanel;
@@ -94,12 +97,16 @@ public class AttachmentPanel {
         attachmentPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-1)), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         fileNameLabel = new JLabel();
         fileNameLabel.setBackground(new Color(-12829636));
+        Font fileNameLabelFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, fileNameLabel.getFont());
+        if (fileNameLabelFont != null) fileNameLabel.setFont(fileNameLabelFont);
         fileNameLabel.setForeground(new Color(-1));
         fileNameLabel.setText("");
         attachmentPanel.add(fileNameLabel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         fileSizeLabel = new JLabel();
         fileSizeLabel.setBackground(new Color(-12829636));
         fileSizeLabel.setEnabled(true);
+        Font fileSizeLabelFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, fileSizeLabel.getFont());
+        if (fileSizeLabelFont != null) fileSizeLabel.setFont(fileSizeLabelFont);
         fileSizeLabel.setForeground(new Color(-1));
         fileSizeLabel.setText("");
         attachmentPanel.add(fileSizeLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -107,6 +114,8 @@ public class AttachmentPanel {
         downloadButton.setBackground(new Color(-12829636));
         downloadButton.setBorderPainted(false);
         downloadButton.setFocusPainted(false);
+        Font downloadButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, downloadButton.getFont());
+        if (downloadButtonFont != null) downloadButton.setFont(downloadButtonFont);
         downloadButton.setForeground(new Color(-1));
         downloadButton.setIcon(new ImageIcon(getClass().getResource("/images/download.png")));
         downloadButton.setText("");
@@ -115,11 +124,35 @@ public class AttachmentPanel {
         xButton.setBackground(new Color(-12829636));
         xButton.setBorderPainted(false);
         xButton.setFocusPainted(false);
+        Font xButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, xButton.getFont());
+        if (xButtonFont != null) xButton.setFont(xButtonFont);
         xButton.setForeground(new Color(-1));
         xButton.setIcon(new ImageIcon(getClass().getResource("/images/x.png")));
         xButton.setOpaque(true);
         xButton.setText("");
         attachmentPanel.add(xButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_NORTHEAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
     /**

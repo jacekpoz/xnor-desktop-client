@@ -22,6 +22,7 @@
         <properties>
           <background color="-12829636"/>
           <enabled value="true"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <labelFor value="37be"/>
           <text resource-bundle="lang" key="app.nickname"/>
@@ -34,6 +35,7 @@
         <properties>
           <background color="-12829636"/>
           <enabled value="true"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <labelFor value="3f595"/>
           <text resource-bundle="lang" key="app.password"/>
@@ -48,37 +50,42 @@
         <properties>
           <background color="-12829636"/>
           <caretColor color="-1"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
         </properties>
       </component>
       <component id="6861a" class="javax.swing.JButton" binding="loginButton">
         <constraints>
           <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="100" height="-1"/>
+            <minimum-size width="120" height="-1"/>
+            <preferred-size width="120" height="-1"/>
           </grid>
         </constraints>
         <properties>
           <background color="-11513776"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <inheritsPopupMenu value="false"/>
-          <label value=""/>
+          <label value="[app.login / lang]"/>
           <text resource-bundle="lang" key="app.login"/>
         </properties>
       </component>
       <component id="956e6" class="javax.swing.JButton" binding="registerButton">
         <constraints>
           <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="100" height="-1"/>
+            <minimum-size width="120" height="-1"/>
+            <preferred-size width="120" height="-1"/>
           </grid>
         </constraints>
         <properties>
           <background color="-11513776"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
-          <label value=""/>
+          <label value="[app.go_to_register / lang]"/>
           <text resource-bundle="lang" key="app.go_to_register"/>
         </properties>
       </component>
@@ -91,6 +98,7 @@
         <properties>
           <background color="-12829636"/>
           <caretColor color="-1"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
         </properties>
       </component>
@@ -102,6 +110,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <text value=""/>
         </properties>
@@ -134,7 +143,7 @@
         </constraints>
         <properties>
           <doubleBuffered value="true"/>
-          <font name="Tw Cen MT Condensed Extra Bold" size="28"/>
+          <font name="Comic Sans MS" size="28" style="0"/>
           <foreground color="-16777216"/>
           <horizontalAlignment value="10"/>
           <horizontalTextPosition value="11"/>

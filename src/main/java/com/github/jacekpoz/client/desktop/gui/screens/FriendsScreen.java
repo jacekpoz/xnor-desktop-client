@@ -17,6 +17,8 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -24,6 +26,7 @@ import java.awt.event.MouseEvent;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -209,6 +212,8 @@ public class FriendsScreen implements Screen {
         friendsScreen.setForeground(new Color(-1));
         pane = new JTabbedPane();
         pane.setBackground(new Color(-12829636));
+        Font paneFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, pane.getFont());
+        if (paneFont != null) pane.setFont(paneFont);
         pane.setForeground(new Color(-1));
         friendsScreen.add(pane, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         friendsPane = new JPanel();
@@ -219,17 +224,23 @@ public class FriendsScreen implements Screen {
         searchFriends = new JTextField();
         searchFriends.setBackground(new Color(-12829636));
         searchFriends.setDisabledTextColor(new Color(-1));
+        Font searchFriendsFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, searchFriends.getFont());
+        if (searchFriendsFont != null) searchFriends.setFont(searchFriendsFont);
         searchFriends.setForeground(new Color(-1));
         friendsPane.add(searchFriends, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         searchFriendsButton = new JButton();
         searchFriendsButton.setBackground(new Color(-12829636));
         searchFriendsButton.setBorderPainted(false);
         searchFriendsButton.setFocusPainted(false);
+        Font searchFriendsButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, searchFriendsButton.getFont());
+        if (searchFriendsButtonFont != null) searchFriendsButton.setFont(searchFriendsButtonFont);
         searchFriendsButton.setForeground(new Color(-1));
         this.$$$loadButtonText$$$(searchFriendsButton, this.$$$getMessageFromBundle$$$("lang", "app.search"));
         friendsPane.add(searchFriendsButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         friendsScrollPane = new JScrollPane();
         friendsScrollPane.setBackground(new Color(-12829636));
+        Font friendsScrollPaneFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, friendsScrollPane.getFont());
+        if (friendsScrollPaneFont != null) friendsScrollPane.setFont(friendsScrollPaneFont);
         friendsScrollPane.setForeground(new Color(-1));
         friendsScrollPane.setHorizontalScrollBarPolicy(31);
         friendsPane.add(friendsScrollPane, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
@@ -245,16 +256,22 @@ public class FriendsScreen implements Screen {
         pane.addTab(this.$$$getMessageFromBundle$$$("lang", "app.add_friends"), addFriendsPane);
         searchNewFriends = new JTextField();
         searchNewFriends.setBackground(new Color(-12829636));
+        Font searchNewFriendsFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, searchNewFriends.getFont());
+        if (searchNewFriendsFont != null) searchNewFriends.setFont(searchNewFriendsFont);
         searchNewFriends.setForeground(new Color(-1));
         addFriendsPane.add(searchNewFriends, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         searchNewFriendsButton = new JButton();
         searchNewFriendsButton.setBackground(new Color(-12829636));
         searchNewFriendsButton.setFocusPainted(false);
+        Font searchNewFriendsButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, searchNewFriendsButton.getFont());
+        if (searchNewFriendsButtonFont != null) searchNewFriendsButton.setFont(searchNewFriendsButtonFont);
         searchNewFriendsButton.setForeground(new Color(-1));
         searchNewFriendsButton.setText("Szukaj");
         addFriendsPane.add(searchNewFriendsButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         newFriendsScrollPane = new JScrollPane();
         newFriendsScrollPane.setBackground(new Color(-12829636));
+        Font newFriendsScrollPaneFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, newFriendsScrollPane.getFont());
+        if (newFriendsScrollPaneFont != null) newFriendsScrollPane.setFont(newFriendsScrollPaneFont);
         newFriendsScrollPane.setForeground(new Color(-1));
         newFriendsScrollPane.setHorizontalScrollBarPolicy(31);
         addFriendsPane.add(newFriendsScrollPane, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
@@ -272,9 +289,33 @@ public class FriendsScreen implements Screen {
         backToMessagesButton.setBackground(new Color(-12829636));
         backToMessagesButton.setBorderPainted(false);
         backToMessagesButton.setFocusPainted(false);
+        Font backToMessagesButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, backToMessagesButton.getFont());
+        if (backToMessagesButtonFont != null) backToMessagesButton.setFont(backToMessagesButtonFont);
         backToMessagesButton.setForeground(new Color(-1));
         this.$$$loadButtonText$$$(backToMessagesButton, this.$$$getMessageFromBundle$$$("lang", "app.go_back"));
         friendsScreen.add(backToMessagesButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
     private static Method $$$cachedGetBundleMethod$$$ = null;
@@ -327,4 +368,5 @@ public class FriendsScreen implements Screen {
     public JComponent $$$getRootComponent$$$() {
         return friendsScreen;
     }
+
 }

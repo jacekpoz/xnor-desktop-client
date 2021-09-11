@@ -19,6 +19,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <text value=""/>
         </properties>
@@ -30,6 +31,7 @@
         <properties>
           <background color="-12829636"/>
           <enabled value="true"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <text value=""/>
         </properties>
@@ -42,6 +44,7 @@
           <background color="-12829636"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <icon value="images/download.png"/>
           <text value=""/>
@@ -55,6 +58,7 @@
           <background color="-12829636"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <icon value="images/x.png"/>
           <opaque value="true"/>
