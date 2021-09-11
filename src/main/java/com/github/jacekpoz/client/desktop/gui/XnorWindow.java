@@ -105,7 +105,7 @@ public class XnorWindow extends JFrame {
         changeLanguage(Locale.US);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setIconImage(new ImageIcon("src/main/resources/images/logo/xnor_icon.png").getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/images/logo/xnor_icon.png")).getImage());
         setMinimumSize(new Dimension(800, 600));
 
         lastScreen = loginScreen;

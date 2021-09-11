@@ -236,9 +236,12 @@ public class RegisterScreen implements Screen {
         registerScreen.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(11, 33), null, 0, false));
         repeatPasswordField = new JPasswordField();
         repeatPasswordField.setBackground(new Color(-12829636));
+        repeatPasswordField.setForeground(new Color(-1));
         registerScreen.add(repeatPasswordField, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(200, -1), null, 0, false));
         repeatPasswordLabel = new JLabel();
-        repeatPasswordLabel.setText("");
+        repeatPasswordLabel.setBackground(new Color(-12829636));
+        repeatPasswordLabel.setForeground(new Color(-1));
+        this.$$$loadLabelText$$$(repeatPasswordLabel, this.$$$getMessageFromBundle$$$("lang", "app.repeat_password"));
         registerScreen.add(repeatPasswordLabel, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         nicknameLabel.setLabelFor(nicknameField);
         passwordLabel.setLabelFor(passwordField);
