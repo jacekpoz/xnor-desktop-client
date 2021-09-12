@@ -78,7 +78,7 @@ public class XnorWindow extends JFrame {
         client = c;
 
         languageBundle = ResourceBundle.getBundle("lang");
-        logDirectory = ".";
+        logDirectory = System.getenv("APPDATA") + "/xnor/logs/";
         ROOT_LOGGER.setUseParentHandlers(false);
         changeLogDirectory(logDirectory);
 
@@ -101,8 +101,10 @@ public class XnorWindow extends JFrame {
         settingsScreen = new SettingsScreen(this);
 
         screens = new Screen[] {messageScreen, loginScreen, registerScreen, friendsScreen, createChatsScreen, settingsScreen};
-        
-        changeLanguage(Locale.US);
+
+        Locale lang = new Locale(getClient().readFromSettingsFile("language").split("_")[0],
+                getClient().readFromSettingsFile("language").split("_")[1]);
+        changeLanguage(lang);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setIconImage(new ImageIcon(getClass().getResource("/images/logo/xnor_icon.png")).getImage());

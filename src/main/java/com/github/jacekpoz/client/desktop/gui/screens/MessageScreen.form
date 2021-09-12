@@ -17,6 +17,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <horizontalScrollBarPolicy value="31"/>
           <verticalScrollBarPolicy value="22"/>
@@ -38,6 +39,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <verticalScrollBarPolicy value="20"/>
         </properties>
@@ -60,6 +62,7 @@
           <background color="-12829636"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <icon value="images/friends.png"/>
           <text value=""/>
@@ -78,6 +81,7 @@
           <background color="-12829636"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <horizontalTextPosition value="0"/>
           <icon value="images/settings.png"/>
@@ -95,6 +99,7 @@
           <background color="-12829636"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <icon value="images/logout.png"/>
           <text value=""/>
@@ -111,6 +116,7 @@
           <background color="-12829636"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <icon value="images/create_chat.png"/>
           <text value=""/>
@@ -122,6 +128,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <horizontalScrollBarPolicy value="30"/>
           <verticalScrollBarPolicy value="20"/>

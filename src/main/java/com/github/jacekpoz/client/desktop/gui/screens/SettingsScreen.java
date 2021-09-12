@@ -8,8 +8,11 @@ import com.github.jacekpoz.common.sendables.database.queries.UserQueryEnum;
 import com.github.jacekpoz.common.sendables.database.results.UserResult;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.io.File;
 import java.lang.reflect.Method;
@@ -46,14 +49,20 @@ public class SettingsScreen implements Screen {
         languageComboBox.addItem(Locale.US);
         languageComboBox.addItem(new Locale("pl", "PL"));
         languageComboBox.addItem(new Locale("es", "ES"));
+        languageComboBox.addItem(new Locale("lol", "US"));
 
-        lang = Locale.US;
+        String[] l = window.getClient().readFromSettingsFile("language").split("_");
+        lang = new Locale(l[0], l[1]);
+
+        languageComboBox.setSelectedItem(lang);
 
         languageComboBox.addItemListener(itemEvent -> updateLanguage());
 
+        logFilesTextField.setText(window.getClient().readFromSettingsFile("logDirectory"));
+
         chooseDirectoryButton.addActionListener(e -> {
             chooser = new JFileChooser();
-            chooser.setCurrentDirectory(new File("."));
+            chooser.setCurrentDirectory(new File(logFilesTextField.getText()));
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             chooser.setAcceptAllFileFilterUsed(false);
             chooser.setDialogTitle(window.getLanguageBundle().getString("app.log_location_chooser_title"));
@@ -63,10 +72,12 @@ public class SettingsScreen implements Screen {
         });
 
         saveLogPathButton.addActionListener(e -> {
-            Path logDirectoryPath = new File(logFilesTextField.getText()).toPath();
+            Path logDirectoryPath = chooser.getCurrentDirectory().toPath();
             if (Files.isDirectory(logDirectoryPath)) {
                 LOGGER.log(Level.INFO, "Changed log directory", logDirectoryPath);
+                window.getClient().writeToSettingsFile("logDirectory", logDirectoryPath);
                 window.changeLogDirectory(logDirectoryPath.toString());
+                window.getClient().writeToSettingsFile("logDirectory", logDirectoryPath.toString());
             } else {
                 resultLabel.setText(window.getLanguageBundle().getString("app.invalid_path"));
                 window.pack();
@@ -105,6 +116,7 @@ public class SettingsScreen implements Screen {
         if (lang.equals(newLang)) return;
         lang = newLang;
         window.changeLanguage(lang);
+        window.getClient().writeToSettingsFile("language", lang);
         LOGGER.log(Level.INFO, "Changed app language", lang);
     }
 
@@ -171,68 +183,112 @@ public class SettingsScreen implements Screen {
      */
     private void $$$setupUI$$$() {
         settingsScreen = new JPanel();
-        settingsScreen.setLayout(new GridLayoutManager(5, 4, new Insets(0, 0, 0, 0), -1, -1));
+        settingsScreen.setLayout(new GridLayoutManager(6, 6, new Insets(0, 0, 0, 0), -1, -1));
         settingsScreen.setBackground(new Color(-12829636));
         settingsScreen.setForeground(new Color(-1));
         languageLabel = new JLabel();
         languageLabel.setBackground(new Color(-12829636));
+        Font languageLabelFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, languageLabel.getFont());
+        if (languageLabelFont != null) languageLabel.setFont(languageLabelFont);
         languageLabel.setForeground(new Color(-1));
         this.$$$loadLabelText$$$(languageLabel, this.$$$getMessageFromBundle$$$("lang", "app.language"));
-        settingsScreen.add(languageLabel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        settingsScreen.add(languageLabel, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, -1), null, null, 0, false));
         languageComboBox = new JComboBox();
-        languageComboBox.setBackground(new Color(-12829636));
+        languageComboBox.setBackground(new Color(-11513776));
+        Font languageComboBoxFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, languageComboBox.getFont());
+        if (languageComboBoxFont != null) languageComboBox.setFont(languageComboBoxFont);
         languageComboBox.setForeground(new Color(-1));
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
         languageComboBox.setModel(defaultComboBoxModel1);
-        settingsScreen.add(languageComboBox, new GridConstraints(1, 1, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        goBackButton = new JButton();
-        goBackButton.setBackground(new Color(-12829636));
-        goBackButton.setBorderPainted(false);
-        goBackButton.setFocusPainted(false);
-        goBackButton.setForeground(new Color(-1));
-        this.$$$loadButtonText$$$(goBackButton, this.$$$getMessageFromBundle$$$("lang", "app.go_back"));
-        settingsScreen.add(goBackButton, new GridConstraints(0, 0, 1, 4, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        settingsScreen.add(languageComboBox, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(200, -1), null, 0, false));
         logFilesLabel = new JLabel();
         logFilesLabel.setBackground(new Color(-12829636));
+        Font logFilesLabelFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, logFilesLabel.getFont());
+        if (logFilesLabelFont != null) logFilesLabel.setFont(logFilesLabelFont);
         logFilesLabel.setForeground(new Color(-1));
         this.$$$loadLabelText$$$(logFilesLabel, this.$$$getMessageFromBundle$$$("lang", "app.log_file_location"));
-        settingsScreen.add(logFilesLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        settingsScreen.add(logFilesLabel, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, -1), null, null, 0, false));
         logFilesTextField = new JTextField();
-        logFilesTextField.setBackground(new Color(-12829636));
+        logFilesTextField.setBackground(new Color(-11513776));
         logFilesTextField.setCaretColor(new Color(-1));
+        Font logFilesTextFieldFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, logFilesTextField.getFont());
+        if (logFilesTextFieldFont != null) logFilesTextField.setFont(logFilesTextFieldFont);
         logFilesTextField.setForeground(new Color(-1));
-        settingsScreen.add(logFilesTextField, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        chooseDirectoryButton = new JButton();
-        chooseDirectoryButton.setBackground(new Color(-12829636));
-        chooseDirectoryButton.setBorderPainted(false);
-        chooseDirectoryButton.setFocusPainted(false);
-        chooseDirectoryButton.setForeground(new Color(-1));
-        chooseDirectoryButton.setHideActionText(true);
-        this.$$$loadButtonText$$$(chooseDirectoryButton, this.$$$getMessageFromBundle$$$("lang", "app.choose_directory"));
-        settingsScreen.add(chooseDirectoryButton, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        settingsScreen.add(logFilesTextField, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(200, -1), null, 0, false));
         resultLabel = new JLabel();
         resultLabel.setBackground(new Color(-12829636));
+        Font resultLabelFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, resultLabel.getFont());
+        if (resultLabelFont != null) resultLabel.setFont(resultLabelFont);
         resultLabel.setForeground(new Color(-1));
         resultLabel.setText("");
-        settingsScreen.add(resultLabel, new GridConstraints(4, 0, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        saveLogPathButton = new JButton();
-        saveLogPathButton.setBackground(new Color(-12829636));
-        saveLogPathButton.setBorderPainted(false);
-        saveLogPathButton.setFocusPainted(false);
-        saveLogPathButton.setForeground(new Color(-1));
-        this.$$$loadButtonText$$$(saveLogPathButton, this.$$$getMessageFromBundle$$$("lang", "app.save_path"));
-        settingsScreen.add(saveLogPathButton, new GridConstraints(2, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        settingsScreen.add(resultLabel, new GridConstraints(5, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         deleteAccountButton = new JButton();
         deleteAccountButton.setBackground(new Color(-65536));
         deleteAccountButton.setBorderPainted(false);
         deleteAccountButton.setEnabled(false);
+        Font deleteAccountButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, deleteAccountButton.getFont());
+        if (deleteAccountButtonFont != null) deleteAccountButton.setFont(deleteAccountButtonFont);
         deleteAccountButton.setForeground(new Color(-1));
-        deleteAccountButton.setLabel("Usuń konto");
+        deleteAccountButton.setLabel("");
         this.$$$loadButtonText$$$(deleteAccountButton, this.$$$getMessageFromBundle$$$("lang", "app.delete_account"));
         deleteAccountButton.setVisible(false);
-        settingsScreen.add(deleteAccountButton, new GridConstraints(3, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        settingsScreen.add(deleteAccountButton, new GridConstraints(4, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        settingsScreen.add(spacer1, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        saveLogPathButton = new JButton();
+        saveLogPathButton.setBackground(new Color(-11513776));
+        saveLogPathButton.setBorderPainted(false);
+        saveLogPathButton.setFocusPainted(false);
+        Font saveLogPathButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, saveLogPathButton.getFont());
+        if (saveLogPathButtonFont != null) saveLogPathButton.setFont(saveLogPathButtonFont);
+        saveLogPathButton.setForeground(new Color(-1));
+        this.$$$loadButtonText$$$(saveLogPathButton, this.$$$getMessageFromBundle$$$("lang", "app.save_path"));
+        settingsScreen.add(saveLogPathButton, new GridConstraints(2, 4, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        chooseDirectoryButton = new JButton();
+        chooseDirectoryButton.setBackground(new Color(-11513776));
+        chooseDirectoryButton.setBorderPainted(false);
+        chooseDirectoryButton.setFocusPainted(false);
+        Font chooseDirectoryButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, chooseDirectoryButton.getFont());
+        if (chooseDirectoryButtonFont != null) chooseDirectoryButton.setFont(chooseDirectoryButtonFont);
+        chooseDirectoryButton.setForeground(new Color(-1));
+        chooseDirectoryButton.setHideActionText(true);
+        this.$$$loadButtonText$$$(chooseDirectoryButton, this.$$$getMessageFromBundle$$$("lang", "app.choose_directory"));
+        settingsScreen.add(chooseDirectoryButton, new GridConstraints(2, 3, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        goBackButton = new JButton();
+        goBackButton.setBackground(new Color(-11513776));
+        goBackButton.setBorderPainted(false);
+        goBackButton.setFocusPainted(false);
+        Font goBackButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, goBackButton.getFont());
+        if (goBackButtonFont != null) goBackButton.setFont(goBackButtonFont);
+        goBackButton.setForeground(new Color(-1));
+        this.$$$loadButtonText$$$(goBackButton, this.$$$getMessageFromBundle$$$("lang", "app.go_back"));
+        settingsScreen.add(goBackButton, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
+        final Spacer spacer2 = new Spacer();
+        settingsScreen.add(spacer2, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, new Dimension(10, -1), null, 0, false));
         languageLabel.setLabelFor(languageComboBox);
         logFilesLabel.setLabelFor(logFilesTextField);
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
     private static Method $$$cachedGetBundleMethod$$$ = null;
@@ -312,4 +368,5 @@ public class SettingsScreen implements Screen {
     public JComponent $$$getRootComponent$$$() {
         return settingsScreen;
     }
+
 }

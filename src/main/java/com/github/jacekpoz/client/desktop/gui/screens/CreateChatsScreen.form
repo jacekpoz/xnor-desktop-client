@@ -19,6 +19,7 @@
           <background color="-12829636"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <opaque value="true"/>
           <rolloverEnabled value="false"/>
@@ -32,6 +33,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <horizontalScrollBarPolicy value="31"/>
         </properties>
@@ -41,6 +43,7 @@
             <constraints/>
             <properties>
               <background color="-12829636"/>
+              <font name="Comic Sans MS"/>
               <foreground color="-1"/>
             </properties>
           </component>
@@ -52,6 +55,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <horizontalScrollBarPolicy value="31"/>
         </properties>
@@ -61,6 +65,7 @@
             <constraints/>
             <properties>
               <background color="-12829636"/>
+              <font name="Comic Sans MS"/>
               <foreground color="-1"/>
             </properties>
           </component>
@@ -74,6 +79,7 @@
           <background color="-12829636"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <text resource-bundle="lang" key="app.add"/>
         </properties>
@@ -87,6 +93,7 @@
           <borderPainted value="false"/>
           <enabled value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <text resource-bundle="lang" key="app.delete"/>
         </properties>
@@ -100,6 +107,7 @@
           <borderPainted value="false"/>
           <enabled value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <text resource-bundle="lang" key="app.create_chat"/>
         </properties>
@@ -113,6 +121,7 @@
         <properties>
           <background color="-12829636"/>
           <caretColor color="-1"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <text value=""/>
         </properties>
@@ -123,6 +132,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <labelFor value="ed4d6"/>
           <text resource-bundle="lang" key="app.chat_name"/>

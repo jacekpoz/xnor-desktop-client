@@ -38,6 +38,7 @@ public class XnorDesktopClientMain {
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Failed to connect to server", e);
             System.out.println("dupa");
+            System.out.println(":))))))))))))))))))))");
             new XnorDesktopClient(null, false, isVLCAvaliable).start();
         }
 

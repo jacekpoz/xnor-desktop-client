@@ -11,6 +11,8 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -237,6 +239,8 @@ public class MessageScreen implements Screen {
         messageScreen.setForeground(new Color(-1));
         messagesScrollPane = new JScrollPane();
         messagesScrollPane.setBackground(new Color(-12829636));
+        Font messagesScrollPaneFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, messagesScrollPane.getFont());
+        if (messagesScrollPaneFont != null) messagesScrollPane.setFont(messagesScrollPaneFont);
         messagesScrollPane.setForeground(new Color(-1));
         messagesScrollPane.setHorizontalScrollBarPolicy(31);
         messagesScrollPane.setVerticalScrollBarPolicy(22);
@@ -246,6 +250,8 @@ public class MessageScreen implements Screen {
         messagesScrollPane.setViewportView(messages);
         chatsScrollPane = new JScrollPane();
         chatsScrollPane.setBackground(new Color(-12829636));
+        Font chatsScrollPaneFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, chatsScrollPane.getFont());
+        if (chatsScrollPaneFont != null) chatsScrollPane.setFont(chatsScrollPaneFont);
         chatsScrollPane.setForeground(new Color(-1));
         chatsScrollPane.setVerticalScrollBarPolicy(20);
         messageScreen.add(chatsScrollPane, new GridConstraints(1, 0, 2, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
@@ -254,6 +260,8 @@ public class MessageScreen implements Screen {
         friendsButton.setBackground(new Color(-12829636));
         friendsButton.setBorderPainted(false);
         friendsButton.setFocusPainted(false);
+        Font friendsButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, friendsButton.getFont());
+        if (friendsButtonFont != null) friendsButton.setFont(friendsButtonFont);
         friendsButton.setForeground(new Color(-1));
         friendsButton.setIcon(new ImageIcon(getClass().getResource("/images/friends.png")));
         friendsButton.setText("");
@@ -264,6 +272,8 @@ public class MessageScreen implements Screen {
         settingsButton.setBackground(new Color(-12829636));
         settingsButton.setBorderPainted(false);
         settingsButton.setFocusPainted(false);
+        Font settingsButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, settingsButton.getFont());
+        if (settingsButtonFont != null) settingsButton.setFont(settingsButtonFont);
         settingsButton.setForeground(new Color(-1));
         settingsButton.setHorizontalTextPosition(0);
         settingsButton.setIcon(new ImageIcon(getClass().getResource("/images/settings.png")));
@@ -273,6 +283,8 @@ public class MessageScreen implements Screen {
         logoutButton.setBackground(new Color(-12829636));
         logoutButton.setBorderPainted(false);
         logoutButton.setFocusPainted(false);
+        Font logoutButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, logoutButton.getFont());
+        if (logoutButtonFont != null) logoutButton.setFont(logoutButtonFont);
         logoutButton.setForeground(new Color(-1));
         logoutButton.setIcon(new ImageIcon(getClass().getResource("/images/logout.png")));
         logoutButton.setText("");
@@ -281,12 +293,16 @@ public class MessageScreen implements Screen {
         chatsButton.setBackground(new Color(-12829636));
         chatsButton.setBorderPainted(false);
         chatsButton.setFocusPainted(false);
+        Font chatsButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, chatsButton.getFont());
+        if (chatsButtonFont != null) chatsButton.setFont(chatsButtonFont);
         chatsButton.setForeground(new Color(-1));
         chatsButton.setIcon(new ImageIcon(getClass().getResource("/images/create_chat.png")));
         chatsButton.setText("");
         messageScreen.add(chatsButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(30, 30), null, new Dimension(30, 30), 0, false));
         messageAreaScrollPane = new JScrollPane();
         messageAreaScrollPane.setBackground(new Color(-12829636));
+        Font messageAreaScrollPaneFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, messageAreaScrollPane.getFont());
+        if (messageAreaScrollPaneFont != null) messageAreaScrollPane.setFont(messageAreaScrollPaneFont);
         messageAreaScrollPane.setForeground(new Color(-1));
         messageAreaScrollPane.setHorizontalScrollBarPolicy(30);
         messageAreaScrollPane.setVerticalScrollBarPolicy(20);
@@ -294,6 +310,28 @@ public class MessageScreen implements Screen {
         messageSender.setBackground(new Color(-12829636));
         messageSender.setForeground(new Color(-1));
         messageAreaScrollPane.setViewportView(messageSender);
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
     /**

@@ -19,6 +19,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
         </properties>
         <border type="none"/>
@@ -43,6 +44,7 @@
                 <properties>
                   <background color="-12829636"/>
                   <disabledTextColor color="-1"/>
+                  <font name="Comic Sans MS"/>
                   <foreground color="-1"/>
                 </properties>
               </component>
@@ -54,6 +56,7 @@
                   <background color="-12829636"/>
                   <borderPainted value="false"/>
                   <focusPainted value="false"/>
+                  <font name="Comic Sans MS"/>
                   <foreground color="-1"/>
                   <text resource-bundle="lang" key="app.search"/>
                 </properties>
@@ -64,6 +67,7 @@
                 </constraints>
                 <properties>
                   <background color="-12829636"/>
+                  <font name="Comic Sans MS"/>
                   <foreground color="-1"/>
                   <horizontalScrollBarPolicy value="31"/>
                 </properties>
@@ -101,6 +105,7 @@
                 </constraints>
                 <properties>
                   <background color="-12829636"/>
+                  <font name="Comic Sans MS"/>
                   <foreground color="-1"/>
                 </properties>
               </component>
@@ -111,8 +116,9 @@
                 <properties>
                   <background color="-12829636"/>
                   <focusPainted value="false"/>
+                  <font name="Comic Sans MS"/>
                   <foreground color="-1"/>
-                  <text value="Szukaj"/>
+                  <text value=""/>
                 </properties>
               </component>
               <scrollpane id="b2653" binding="newFriendsScrollPane">
@@ -121,6 +127,7 @@
                 </constraints>
                 <properties>
                   <background color="-12829636"/>
+                  <font name="Comic Sans MS"/>
                   <foreground color="-1"/>
                   <horizontalScrollBarPolicy value="31"/>
                 </properties>
@@ -160,6 +167,7 @@
           <background color="-12829636"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <text resource-bundle="lang" key="app.go_back"/>
         </properties>

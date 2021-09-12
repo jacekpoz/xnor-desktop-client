@@ -17,6 +17,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <labelFor value="fefb7"/>
           <text resource-bundle="lang" key="app.nickname"/>
@@ -31,6 +32,7 @@
         <properties>
           <background color="-12829636"/>
           <caretColor color="-1"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
         </properties>
       </component>
@@ -40,6 +42,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <labelFor value="7a6c4"/>
           <text resource-bundle="lang" key="app.password"/>
@@ -55,6 +58,7 @@
           <background color="-11513776"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <text resource-bundle="lang" key="app.register"/>
         </properties>
@@ -69,6 +73,7 @@
           <background color="-11513776"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <text resource-bundle="lang" key="app.go_to_login"/>
         </properties>
@@ -81,6 +86,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <text value=""/>
         </properties>
@@ -94,6 +100,7 @@
         <properties>
           <background color="-12829636"/>
           <caretColor color="-1"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
         </properties>
       </component>
@@ -102,7 +109,7 @@
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <font name="Tw Cen MT Condensed Extra Bold" size="28"/>
+          <font name="Comic Sans MS" size="28"/>
           <foreground color="-16777216"/>
           <horizontalAlignment value="10"/>
           <horizontalTextPosition value="11"/>
@@ -122,6 +129,7 @@
           <background color="-11513776"/>
           <borderPainted value="false"/>
           <focusPainted value="false"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <horizontalTextPosition value="0"/>
           <icon value="images/settings.png"/>
@@ -131,7 +139,7 @@
       <vspacer id="94282">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-            <preferred-size width="11" height="33"/>
+            <minimum-size width="-1" height="100"/>
           </grid>
         </constraints>
       </vspacer>
@@ -143,6 +151,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
         </properties>
       </component>
@@ -152,6 +161,7 @@
         </constraints>
         <properties>
           <background color="-12829636"/>
+          <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <labelFor value="deba1"/>
           <text resource-bundle="lang" key="app.repeat_password"/>

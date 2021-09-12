@@ -14,10 +14,13 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -202,6 +205,8 @@ public class CreateChatsScreen implements Screen {
         backToMessagesButton.setBackground(new Color(-12829636));
         backToMessagesButton.setBorderPainted(false);
         backToMessagesButton.setFocusPainted(false);
+        Font backToMessagesButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, backToMessagesButton.getFont());
+        if (backToMessagesButtonFont != null) backToMessagesButton.setFont(backToMessagesButtonFont);
         backToMessagesButton.setForeground(new Color(-1));
         backToMessagesButton.setOpaque(true);
         backToMessagesButton.setRolloverEnabled(false);
@@ -210,26 +215,36 @@ public class CreateChatsScreen implements Screen {
         createChatsScreen.add(backToMessagesButton, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         friendsScrollPane = new JScrollPane();
         friendsScrollPane.setBackground(new Color(-12829636));
+        Font friendsScrollPaneFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, friendsScrollPane.getFont());
+        if (friendsScrollPaneFont != null) friendsScrollPane.setFont(friendsScrollPaneFont);
         friendsScrollPane.setForeground(new Color(-1));
         friendsScrollPane.setHorizontalScrollBarPolicy(31);
         createChatsScreen.add(friendsScrollPane, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         friendsList = new JList();
         friendsList.setBackground(new Color(-12829636));
+        Font friendsListFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, friendsList.getFont());
+        if (friendsListFont != null) friendsList.setFont(friendsListFont);
         friendsList.setForeground(new Color(-1));
         friendsScrollPane.setViewportView(friendsList);
         addedFriendsScrollPane = new JScrollPane();
         addedFriendsScrollPane.setBackground(new Color(-12829636));
+        Font addedFriendsScrollPaneFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, addedFriendsScrollPane.getFont());
+        if (addedFriendsScrollPaneFont != null) addedFriendsScrollPane.setFont(addedFriendsScrollPaneFont);
         addedFriendsScrollPane.setForeground(new Color(-1));
         addedFriendsScrollPane.setHorizontalScrollBarPolicy(31);
         createChatsScreen.add(addedFriendsScrollPane, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         addedFriendsList = new JList();
         addedFriendsList.setBackground(new Color(-12829636));
+        Font addedFriendsListFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, addedFriendsList.getFont());
+        if (addedFriendsListFont != null) addedFriendsList.setFont(addedFriendsListFont);
         addedFriendsList.setForeground(new Color(-1));
         addedFriendsScrollPane.setViewportView(addedFriendsList);
         addButton = new JButton();
         addButton.setBackground(new Color(-12829636));
         addButton.setBorderPainted(false);
         addButton.setFocusPainted(false);
+        Font addButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, addButton.getFont());
+        if (addButtonFont != null) addButton.setFont(addButtonFont);
         addButton.setForeground(new Color(-1));
         this.$$$loadButtonText$$$(addButton, this.$$$getMessageFromBundle$$$("lang", "app.add"));
         createChatsScreen.add(addButton, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -238,6 +253,8 @@ public class CreateChatsScreen implements Screen {
         deleteButton.setBorderPainted(false);
         deleteButton.setEnabled(false);
         deleteButton.setFocusPainted(false);
+        Font deleteButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, deleteButton.getFont());
+        if (deleteButtonFont != null) deleteButton.setFont(deleteButtonFont);
         deleteButton.setForeground(new Color(-1));
         this.$$$loadButtonText$$$(deleteButton, this.$$$getMessageFromBundle$$$("lang", "app.delete"));
         createChatsScreen.add(deleteButton, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -246,21 +263,49 @@ public class CreateChatsScreen implements Screen {
         createChatButton.setBorderPainted(false);
         createChatButton.setEnabled(false);
         createChatButton.setFocusPainted(false);
+        Font createChatButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, createChatButton.getFont());
+        if (createChatButtonFont != null) createChatButton.setFont(createChatButtonFont);
         createChatButton.setForeground(new Color(-1));
         this.$$$loadButtonText$$$(createChatButton, this.$$$getMessageFromBundle$$$("lang", "app.create_chat"));
         createChatsScreen.add(createChatButton, new GridConstraints(4, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         chatNameTextField = new JTextField();
         chatNameTextField.setBackground(new Color(-12829636));
         chatNameTextField.setCaretColor(new Color(-1));
+        Font chatNameTextFieldFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, chatNameTextField.getFont());
+        if (chatNameTextFieldFont != null) chatNameTextField.setFont(chatNameTextFieldFont);
         chatNameTextField.setForeground(new Color(-1));
         chatNameTextField.setText("");
         createChatsScreen.add(chatNameTextField, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         chatNameLabel = new JLabel();
         chatNameLabel.setBackground(new Color(-12829636));
+        Font chatNameLabelFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, chatNameLabel.getFont());
+        if (chatNameLabelFont != null) chatNameLabel.setFont(chatNameLabelFont);
         chatNameLabel.setForeground(new Color(-1));
         this.$$$loadLabelText$$$(chatNameLabel, this.$$$getMessageFromBundle$$$("lang", "app.chat_name"));
         createChatsScreen.add(chatNameLabel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         chatNameLabel.setLabelFor(chatNameTextField);
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
     private static Method $$$cachedGetBundleMethod$$$ = null;
@@ -340,4 +385,5 @@ public class CreateChatsScreen implements Screen {
     public JComponent $$$getRootComponent$$$() {
         return createChatsScreen;
     }
+
 }
