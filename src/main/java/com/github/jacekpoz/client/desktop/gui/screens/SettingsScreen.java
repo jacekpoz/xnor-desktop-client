@@ -1,5 +1,7 @@
 package com.github.jacekpoz.client.desktop.gui.screens;
 
+import com.github.jacekpoz.client.desktop.XnorLocale;
+import com.github.jacekpoz.client.desktop.XnorNumberFormatter;
 import com.github.jacekpoz.client.desktop.gui.XnorWindow;
 import com.github.jacekpoz.client.desktop.gui.Screen;
 import com.github.jacekpoz.common.sendables.Sendable;
@@ -18,6 +20,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -30,7 +33,7 @@ public class SettingsScreen implements Screen {
     private final XnorWindow window;
 
     private JPanel settingsScreen;
-    private JComboBox<Locale> languageComboBox;
+    private JComboBox<XnorLocale> languageComboBox;
     private JLabel languageLabel;
     private JButton goBackButton;
     private JTextField logFilesTextField;
@@ -39,20 +42,22 @@ public class SettingsScreen implements Screen {
     private JLabel resultLabel;
     private JButton saveLogPathButton;
     private JButton deleteAccountButton;
+    private JLabel autoSavePeriodLabel;
+    private JFormattedTextField autoSavePeriodField;
 
     private JFileChooser chooser;
 
-    private Locale lang;
+    private XnorLocale lang;
 
     public SettingsScreen(XnorWindow w) {
         window = w;
-        languageComboBox.addItem(Locale.US);
-        languageComboBox.addItem(new Locale("pl", "PL"));
-        languageComboBox.addItem(new Locale("es", "ES"));
-        languageComboBox.addItem(new Locale("lol", "US"));
+        $$$setupUI$$$();
+        languageComboBox.addItem(XnorLocale.en_US);
+        languageComboBox.addItem(XnorLocale.es_ES);
+        languageComboBox.addItem(XnorLocale.pl_PL);
+        languageComboBox.addItem(XnorLocale.lol_US);
 
-        String[] l = window.getClient().readFromSettingsFile("language").split("_");
-        lang = new Locale(l[0], l[1]);
+        lang = XnorLocale.en_US;
 
         languageComboBox.setSelectedItem(lang);
 
@@ -65,7 +70,7 @@ public class SettingsScreen implements Screen {
             chooser.setCurrentDirectory(new File(logFilesTextField.getText()));
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             chooser.setAcceptAllFileFilterUsed(false);
-            chooser.setDialogTitle(window.getLanguageBundle().getString("app.log_location_chooser_title"));
+            chooser.setDialogTitle(window.getLanguageBundle().getString("settings.log_location_chooser_title"));
             if (chooser.showOpenDialog(getPanel()) == JFileChooser.APPROVE_OPTION) {
                 logFilesTextField.setText(chooser.getCurrentDirectory().toPath().toString());
             }
@@ -79,7 +84,7 @@ public class SettingsScreen implements Screen {
                 window.changeLogDirectory(logDirectoryPath.toString());
                 window.getClient().writeToSettingsFile("logDirectory", logDirectoryPath.toString());
             } else {
-                resultLabel.setText(window.getLanguageBundle().getString("app.invalid_path"));
+                resultLabel.setText(window.getLanguageBundle().getString("settings.invalid_path"));
                 window.pack();
             }
         });
@@ -112,10 +117,10 @@ public class SettingsScreen implements Screen {
     }
 
     private void updateLanguage() {
-        Locale newLang = languageComboBox.getItemAt(languageComboBox.getSelectedIndex());
+        XnorLocale newLang = languageComboBox.getItemAt(languageComboBox.getSelectedIndex());
         if (lang.equals(newLang)) return;
         lang = newLang;
-        window.changeLanguage(lang);
+        window.changeLanguage(lang.getLocale());
         window.getClient().writeToSettingsFile("language", lang);
         LOGGER.log(Level.INFO, "Changed app language", lang);
     }
@@ -159,19 +164,18 @@ public class SettingsScreen implements Screen {
 
     @Override
     public void changeLanguage() {
-        languageLabel.setText(window.getLangString("app.language"));
+        languageLabel.setText(window.getLangString("settings.language"));
         goBackButton.setText(window.getLangString("app.go_back"));
-        chooseDirectoryButton.setText(window.getLangString("app.choose_directory"));
-        logFilesLabel.setText(window.getLangString("app.log_file_location"));
-        saveLogPathButton.setText(window.getLangString("app.save_path"));
-        deleteAccountButton.setText(window.getLangString("app.delete_account"));
-    }
+        chooseDirectoryButton.setText(window.getLangString("settings.choose_directory"));
+        logFilesLabel.setText(window.getLangString("settings.log_file_location"));
+        saveLogPathButton.setText(window.getLangString("settings.save_path"));
+        deleteAccountButton.setText(window.getLangString("settings.delete_account"));
+        autoSavePeriodLabel.setText(window.getLangString("settings.auto_save_period"));
 
-    {
-// GUI initializer generated by IntelliJ IDEA GUI Designer
-// >>> IMPORTANT!! <<<
-// DO NOT EDIT OR ADD ANY CODE HERE!
-        $$$setupUI$$$();
+        for (int i = 0; i < languageComboBox.getItemCount(); i++) {
+            XnorLocale xl = languageComboBox.getItemAt(i);
+            xl.setLocaleName(window.getLangString("app." + xl.getLocale().toString() + "_name"));
+        }
     }
 
     /**
@@ -182,8 +186,9 @@ public class SettingsScreen implements Screen {
      * @noinspection ALL
      */
     private void $$$setupUI$$$() {
+        createUIComponents();
         settingsScreen = new JPanel();
-        settingsScreen.setLayout(new GridLayoutManager(6, 6, new Insets(0, 0, 0, 0), -1, -1));
+        settingsScreen.setLayout(new GridLayoutManager(7, 6, new Insets(0, 0, 0, 0), -1, -1));
         settingsScreen.setBackground(new Color(-12829636));
         settingsScreen.setForeground(new Color(-1));
         languageLabel = new JLabel();
@@ -191,7 +196,7 @@ public class SettingsScreen implements Screen {
         Font languageLabelFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, languageLabel.getFont());
         if (languageLabelFont != null) languageLabel.setFont(languageLabelFont);
         languageLabel.setForeground(new Color(-1));
-        this.$$$loadLabelText$$$(languageLabel, this.$$$getMessageFromBundle$$$("lang", "app.language"));
+        this.$$$loadLabelText$$$(languageLabel, this.$$$getMessageFromBundle$$$("lang", "settings.language"));
         settingsScreen.add(languageLabel, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, -1), null, null, 0, false));
         languageComboBox = new JComboBox();
         languageComboBox.setBackground(new Color(-11513776));
@@ -206,7 +211,7 @@ public class SettingsScreen implements Screen {
         Font logFilesLabelFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, logFilesLabel.getFont());
         if (logFilesLabelFont != null) logFilesLabel.setFont(logFilesLabelFont);
         logFilesLabel.setForeground(new Color(-1));
-        this.$$$loadLabelText$$$(logFilesLabel, this.$$$getMessageFromBundle$$$("lang", "app.log_file_location"));
+        this.$$$loadLabelText$$$(logFilesLabel, this.$$$getMessageFromBundle$$$("lang", "settings.log_file_location"));
         settingsScreen.add(logFilesLabel, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, -1), null, null, 0, false));
         logFilesTextField = new JTextField();
         logFilesTextField.setBackground(new Color(-11513776));
@@ -221,7 +226,7 @@ public class SettingsScreen implements Screen {
         if (resultLabelFont != null) resultLabel.setFont(resultLabelFont);
         resultLabel.setForeground(new Color(-1));
         resultLabel.setText("");
-        settingsScreen.add(resultLabel, new GridConstraints(5, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        settingsScreen.add(resultLabel, new GridConstraints(6, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         deleteAccountButton = new JButton();
         deleteAccountButton.setBackground(new Color(-65536));
         deleteAccountButton.setBorderPainted(false);
@@ -229,12 +234,12 @@ public class SettingsScreen implements Screen {
         Font deleteAccountButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, deleteAccountButton.getFont());
         if (deleteAccountButtonFont != null) deleteAccountButton.setFont(deleteAccountButtonFont);
         deleteAccountButton.setForeground(new Color(-1));
-        deleteAccountButton.setLabel("");
-        this.$$$loadButtonText$$$(deleteAccountButton, this.$$$getMessageFromBundle$$$("lang", "app.delete_account"));
+        deleteAccountButton.setLabel("Usuń konto");
+        this.$$$loadButtonText$$$(deleteAccountButton, this.$$$getMessageFromBundle$$$("lang", "settings.delete_account"));
         deleteAccountButton.setVisible(false);
-        settingsScreen.add(deleteAccountButton, new GridConstraints(4, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        settingsScreen.add(deleteAccountButton, new GridConstraints(5, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
-        settingsScreen.add(spacer1, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        settingsScreen.add(spacer1, new GridConstraints(4, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         saveLogPathButton = new JButton();
         saveLogPathButton.setBackground(new Color(-11513776));
         saveLogPathButton.setBorderPainted(false);
@@ -242,7 +247,7 @@ public class SettingsScreen implements Screen {
         Font saveLogPathButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, saveLogPathButton.getFont());
         if (saveLogPathButtonFont != null) saveLogPathButton.setFont(saveLogPathButtonFont);
         saveLogPathButton.setForeground(new Color(-1));
-        this.$$$loadButtonText$$$(saveLogPathButton, this.$$$getMessageFromBundle$$$("lang", "app.save_path"));
+        this.$$$loadButtonText$$$(saveLogPathButton, this.$$$getMessageFromBundle$$$("lang", "settings.save_path"));
         settingsScreen.add(saveLogPathButton, new GridConstraints(2, 4, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         chooseDirectoryButton = new JButton();
         chooseDirectoryButton.setBackground(new Color(-11513776));
@@ -252,7 +257,7 @@ public class SettingsScreen implements Screen {
         if (chooseDirectoryButtonFont != null) chooseDirectoryButton.setFont(chooseDirectoryButtonFont);
         chooseDirectoryButton.setForeground(new Color(-1));
         chooseDirectoryButton.setHideActionText(true);
-        this.$$$loadButtonText$$$(chooseDirectoryButton, this.$$$getMessageFromBundle$$$("lang", "app.choose_directory"));
+        this.$$$loadButtonText$$$(chooseDirectoryButton, this.$$$getMessageFromBundle$$$("lang", "settings.choose_directory"));
         settingsScreen.add(chooseDirectoryButton, new GridConstraints(2, 3, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         goBackButton = new JButton();
         goBackButton.setBackground(new Color(-11513776));
@@ -265,6 +270,17 @@ public class SettingsScreen implements Screen {
         settingsScreen.add(goBackButton, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
         final Spacer spacer2 = new Spacer();
         settingsScreen.add(spacer2, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, new Dimension(10, -1), null, 0, false));
+        autoSavePeriodLabel = new JLabel();
+        autoSavePeriodLabel.setBackground(new Color(-12829636));
+        Font autoSavePeriodLabelFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, autoSavePeriodLabel.getFont());
+        if (autoSavePeriodLabelFont != null) autoSavePeriodLabel.setFont(autoSavePeriodLabelFont);
+        autoSavePeriodLabel.setForeground(new Color(-1));
+        this.$$$loadLabelText$$$(autoSavePeriodLabel, this.$$$getMessageFromBundle$$$("lang", "settings.auto_save_period"));
+        settingsScreen.add(autoSavePeriodLabel, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        autoSavePeriodField.setBackground(new Color(-11513776));
+        autoSavePeriodField.setCaretColor(new Color(-1));
+        autoSavePeriodField.setForeground(new Color(-1));
+        settingsScreen.add(autoSavePeriodField, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         languageLabel.setLabelFor(languageComboBox);
         logFilesLabel.setLabelFor(logFilesTextField);
     }
@@ -369,4 +385,11 @@ public class SettingsScreen implements Screen {
         return settingsScreen;
     }
 
+    private void createUIComponents() {
+        autoSavePeriodField = new JFormattedTextField(
+                new XnorNumberFormatter(
+                        NumberFormat.getInstance()
+                )
+        );
+    }
 }

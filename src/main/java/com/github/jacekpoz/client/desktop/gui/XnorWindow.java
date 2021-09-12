@@ -3,6 +3,7 @@ package com.github.jacekpoz.client.desktop.gui;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.jacekpoz.client.desktop.XnorDesktopClient;
 import com.github.jacekpoz.client.desktop.InputHandler;
+import com.github.jacekpoz.client.desktop.XnorLocale;
 import com.github.jacekpoz.client.desktop.gui.screens.*;
 import com.github.jacekpoz.client.desktop.logging.LogFormatter;
 import com.github.jacekpoz.common.jackson.JsonObjectMapper;
@@ -102,9 +103,7 @@ public class XnorWindow extends JFrame {
 
         screens = new Screen[] {messageScreen, loginScreen, registerScreen, friendsScreen, createChatsScreen, settingsScreen};
 
-        Locale lang = new Locale(getClient().readFromSettingsFile("language").split("_")[0],
-                getClient().readFromSettingsFile("language").split("_")[1]);
-        changeLanguage(lang);
+        changeLanguage(XnorLocale.en_US.getLocale());
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setIconImage(new ImageIcon(getClass().getResource("/images/logo/xnor_icon.png")).getImage());

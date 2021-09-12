@@ -180,7 +180,7 @@
           <label value=""/>
           <name value=""/>
           <selected value="false"/>
-          <text resource-bundle="lang" key="app.remember_me"/>
+          <text resource-bundle="lang" key="login.remember_me"/>
         </properties>
       </component>
     </children>

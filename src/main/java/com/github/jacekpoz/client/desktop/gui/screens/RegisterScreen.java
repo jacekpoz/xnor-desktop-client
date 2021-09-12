@@ -67,11 +67,11 @@ public class RegisterScreen implements Screen {
     private void register(String username, char[] password, char[] repeatedPassword) {
 
         if (username.isEmpty() || password.length == 0 || repeatedPassword.length == 0) {
-            result.setText(window.getLangString("app.input_name_and_password"));
+            result.setText(window.getLangString("login.input_name_and_password"));
             return;
         }
         if (!Arrays.equals(password, repeatedPassword)) {
-            result.setText(window.getLangString("app.passwords_not_equal"));
+            result.setText(window.getLangString("register.passwords_not_equal"));
             return;
         }
 
@@ -121,11 +121,11 @@ public class RegisterScreen implements Screen {
             switch (rr.getResult()) {
                 case ACCOUNT_CREATED:
                     LOGGER.log(Level.INFO, "Account created.", rr.get().get(0));
-                    result.setText(window.getLangString("app.account_created"));
+                    result.setText(window.getLangString("register.account_created"));
                     break;
                 case USERNAME_TAKEN:
                     LOGGER.log(Level.INFO, "Username taken.");
-                    result.setText(window.getLangString("app.username_taken"));
+                    result.setText(window.getLangString("register.username_taken"));
                     break;
                 case SQL_EXCEPTION:
                     LOGGER.log(Level.SEVERE, "An SQLException occured while registering.", rr.getEx());
@@ -146,7 +146,7 @@ public class RegisterScreen implements Screen {
     public void changeLanguage() {
         nicknameLabel.setText(window.getLangString("app.nickname"));
         passwordLabel.setText(window.getLangString("app.password"));
-        repeatPasswordLabel.setText(window.getLangString("app.repeat_password"));
+        repeatPasswordLabel.setText(window.getLangString("register.repeat_password"));
         registerButton.setText(window.getLangString("app.register"));
         loginButton.setText(window.getLangString("app.go_to_login"));
 
@@ -261,7 +261,7 @@ public class RegisterScreen implements Screen {
         Font repeatPasswordLabelFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, repeatPasswordLabel.getFont());
         if (repeatPasswordLabelFont != null) repeatPasswordLabel.setFont(repeatPasswordLabelFont);
         repeatPasswordLabel.setForeground(new Color(-1));
-        this.$$$loadLabelText$$$(repeatPasswordLabel, this.$$$getMessageFromBundle$$$("lang", "app.repeat_password"));
+        this.$$$loadLabelText$$$(repeatPasswordLabel, this.$$$getMessageFromBundle$$$("lang", "register.repeat_password"));
         registerScreen.add(repeatPasswordLabel, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         nicknameLabel.setLabelFor(nicknameField);
         passwordLabel.setLabelFor(passwordField);

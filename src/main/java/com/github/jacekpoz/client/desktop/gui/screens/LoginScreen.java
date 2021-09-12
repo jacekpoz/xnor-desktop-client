@@ -18,8 +18,6 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
@@ -85,15 +83,14 @@ public class LoginScreen implements Screen {
                 rememberMeCheckBox.setSelected(true);
             }
         } catch (FileNotFoundException ex) {
-            window.getClient().tryInitializeAppDataDirectory();
-            new LoginScreen(window);
+
         }
     }
 
     private void login(String username, char[] password, boolean autologin) {
 
         if (username.isEmpty() || password.length == 0) {
-            result.setText(window.getLangString("app.input_name_and_password"));
+            result.setText(window.getLangString("login.input_name_and_password"));
             return;
         }
 
@@ -145,22 +142,22 @@ public class LoginScreen implements Screen {
 
             switch (lr.getResult()) {
                 case LOGGED_IN: {
-                    User u = lr.get().get(0);
+                    User u = lr.get(0);
                     window.getClient().setUser(u);
                     window.getClient().setLoggedIn(true);
                     window.setScreen(window.getMessageScreen());
                     update();
-                    result.setText(window.getLangString("app.logged_in"));
+                    result.setText(window.getLangString("login.logged_in"));
                     LOGGER.log(Level.INFO, "Logged in", u);
                     break;
                 }
                 case ACCOUNT_DOESNT_EXIST:
                     LOGGER.log(Level.INFO, "Account doesn't exist");
-                    result.setText(window.getLangString("app.account_doesnt_exist"));
+                    result.setText(window.getLangString("login.account_doesnt_exist"));
                     break;
                 case WRONG_PASSWORD:
                     LOGGER.log(Level.INFO, "Wrong password");
-                    result.setText(window.getLangString("app.wrong_password"));
+                    result.setText(window.getLangString("login.wrong_password"));
                     break;
                 case SQL_EXCEPTION:
                     LOGGER.log(Level.SEVERE, "An SQLException occured while logging in ", lr.getEx());
@@ -183,7 +180,7 @@ public class LoginScreen implements Screen {
         passwordLabel.setText(window.getLangString("app.password"));
         loginButton.setText(window.getLangString("app.login"));
         registerButton.setText(window.getLangString("app.go_to_register"));
-        rememberMeCheckBox.setText(window.getLangString("app.remember_me"));
+        rememberMeCheckBox.setText(window.getLangString("login.remember_me"));
 
         loginButton.setMnemonic(loginButton.getText().charAt(0));
         registerButton.setMnemonic(registerButton.getText().charAt(0));
@@ -310,7 +307,7 @@ public class LoginScreen implements Screen {
         rememberMeCheckBox.setLabel("");
         rememberMeCheckBox.setName("");
         rememberMeCheckBox.setSelected(false);
-        this.$$$loadButtonText$$$(rememberMeCheckBox, this.$$$getMessageFromBundle$$$("lang", "app.remember_me"));
+        this.$$$loadButtonText$$$(rememberMeCheckBox, this.$$$getMessageFromBundle$$$("lang", "login.remember_me"));
         loginScreen.add(rememberMeCheckBox, new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         nicknameLabel.setLabelFor(nicknameField);
         passwordLabel.setLabelFor(passwordField);

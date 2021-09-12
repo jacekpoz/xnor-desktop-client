@@ -164,7 +164,7 @@
           <font name="Comic Sans MS"/>
           <foreground color="-1"/>
           <labelFor value="deba1"/>
-          <text resource-bundle="lang" key="app.repeat_password"/>
+          <text resource-bundle="lang" key="register.repeat_password"/>
         </properties>
       </component>
     </children>

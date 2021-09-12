@@ -25,11 +25,6 @@ public class XnorDesktopClientMain {
             e.printStackTrace();
         });
 
-//        try {
-//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-//            LOGGER.log(Level.SEVERE, "Could not load system look and feel", e);
-//        }
 
         boolean isVLCAvaliable = new NativeDiscovery().discover();
 
@@ -37,8 +32,6 @@ public class XnorDesktopClientMain {
             new XnorDesktopClient(new Socket(host, port), true, isVLCAvaliable).start();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Failed to connect to server", e);
-            System.out.println("dupa");
-            System.out.println(":))))))))))))))))))))");
             new XnorDesktopClient(null, false, isVLCAvaliable).start();
         }
 
