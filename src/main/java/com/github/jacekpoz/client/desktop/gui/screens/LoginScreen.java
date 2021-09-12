@@ -85,7 +85,7 @@ public class LoginScreen implements Screen {
                 rememberMeCheckBox.setSelected(true);
             }
         } catch (FileNotFoundException ex) {
-            window.getClient().initializeAppDataDirectory();
+            window.getClient().tryInitializeAppDataDirectory();
             new LoginScreen(window);
         }
     }
@@ -108,7 +108,8 @@ public class LoginScreen implements Screen {
         if (!autologin) {
             window.getClient().writeToSettingsFile("AutoLogin", rememberMeCheckBox.isSelected());
             window.getClient().writeToSettingsFile("Username", username);
-            window.getClient().writeToSettingsFile("Password", password);
+            // ok this is absolutely unsafe but 1 this isnt yet used by anyone except us and 2 i dont know how to make it better and 3
+            window.getClient().writeToSettingsFile("Password", passwordField.getText());
         }
 
         window.send(login);
@@ -182,6 +183,7 @@ public class LoginScreen implements Screen {
         passwordLabel.setText(window.getLangString("app.password"));
         loginButton.setText(window.getLangString("app.login"));
         registerButton.setText(window.getLangString("app.go_to_register"));
+        rememberMeCheckBox.setText(window.getLangString("app.remember_me"));
 
         loginButton.setMnemonic(loginButton.getText().charAt(0));
         registerButton.setMnemonic(registerButton.getText().charAt(0));

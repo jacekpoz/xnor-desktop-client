@@ -29,7 +29,7 @@ public class XnorDesktopClient {
     private boolean isVLCAvailable;
 
     public XnorDesktopClient(Socket s, boolean isOnline, boolean isVLCAvailable) {
-        initializeAppDataDirectory();
+        tryInitializeAppDataDirectory();
         socket = s;
         this.isOnline = isOnline;
         this.isVLCAvailable = isVLCAvailable;
@@ -38,13 +38,13 @@ public class XnorDesktopClient {
         chat = new Chat(-1, "dupa", LocalDateTime.MIN, -1);
     }
 
-    public void initializeAppDataDirectory() {
+    public void tryInitializeAppDataDirectory() {
         try {
             File file = new File(System.getenv("APPDATA") + "\\xnor\\");
             if (!file.exists()) { if (file.mkdir()) System.out.println("created xnor directory"); }
             else { System.out.println("xnor directory already exists"); }
 
-            file = new File(System.getenv("APPDATA") + "\\xnor\\logs/");
+            file = new File(System.getenv("APPDATA") + "\\xnor\\logs\\");
             if (!file.exists()) { if (file.mkdir()) System.out.println("created xnor log directory"); }
             else { System.out.println("xnor log directory already exists"); }
 
@@ -73,7 +73,6 @@ public class XnorDesktopClient {
 
     public void writeToSettingsFile(String key, Object value) {
         try {
-            // check if key exists
             File file = new File(System.getenv("APPDATA") + "\\xnor\\settings.txt");
             Scanner scanner = new Scanner(file);
             String validdata = "";
@@ -110,7 +109,7 @@ public class XnorDesktopClient {
             }
 
         } catch (FileNotFoundException ex) {
-            initializeAppDataDirectory();
+            tryInitializeAppDataDirectory();
             readFromSettingsFile(key);
         }
         return "";
