@@ -266,7 +266,7 @@ public class FriendsScreen implements Screen {
         Font searchNewFriendsButtonFont = this.$$$getFont$$$("Comic Sans MS", -1, -1, searchNewFriendsButton.getFont());
         if (searchNewFriendsButtonFont != null) searchNewFriendsButton.setFont(searchNewFriendsButtonFont);
         searchNewFriendsButton.setForeground(new Color(-1));
-        searchNewFriendsButton.setText("Szukaj");
+        searchNewFriendsButton.setText("");
         addFriendsPane.add(searchNewFriendsButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         newFriendsScrollPane = new JScrollPane();
         newFriendsScrollPane.setBackground(new Color(-12829636));
