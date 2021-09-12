@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 
-public class LogFormatter extends SimpleFormatter {
+public class XnorLogFormatter extends SimpleFormatter {
     @Override
     public synchronized String format(LogRecord lr) {
         return String.format("[%1$s] [%2$-7s] %3$s at %4$s.%5$s%n%6$s%n%7$s %8$s%n",

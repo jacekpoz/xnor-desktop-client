@@ -1,6 +1,6 @@
 package com.github.jacekpoz.client.desktop.gui.screens;
 
-import com.github.jacekpoz.client.desktop.XnorLocale;
+import com.github.jacekpoz.client.desktop.XnorLanguage;
 import com.github.jacekpoz.client.desktop.XnorNumberFormatter;
 import com.github.jacekpoz.client.desktop.gui.XnorWindow;
 import com.github.jacekpoz.client.desktop.gui.Screen;
@@ -33,7 +33,7 @@ public class SettingsScreen implements Screen {
     private final XnorWindow window;
 
     private JPanel settingsScreen;
-    private JComboBox<XnorLocale> languageComboBox;
+    private JComboBox<XnorLanguage> languageComboBox;
     private JLabel languageLabel;
     private JButton goBackButton;
     private JTextField logFilesTextField;
@@ -47,23 +47,21 @@ public class SettingsScreen implements Screen {
 
     private JFileChooser chooser;
 
-    private XnorLocale lang;
+    private XnorLanguage lang;
 
     public SettingsScreen(XnorWindow w) {
         window = w;
         $$$setupUI$$$();
-        languageComboBox.addItem(XnorLocale.en_US);
-        languageComboBox.addItem(XnorLocale.es_ES);
-        languageComboBox.addItem(XnorLocale.pl_PL);
-        languageComboBox.addItem(XnorLocale.lol_US);
+        languageComboBox.addItem(XnorLanguage.en_US);
+        languageComboBox.addItem(XnorLanguage.es_ES);
+        languageComboBox.addItem(XnorLanguage.pl_PL);
+        languageComboBox.addItem(XnorLanguage.lol_US);
 
-        lang = XnorLocale.en_US;
+        lang = window.getClient().getSettings().getLanguage();
 
         languageComboBox.setSelectedItem(lang);
 
         languageComboBox.addItemListener(itemEvent -> updateLanguage());
-
-        logFilesTextField.setText(window.getClient().readFromSettingsFile("logDirectory"));
 
         chooseDirectoryButton.addActionListener(e -> {
             chooser = new JFileChooser();
@@ -80,16 +78,17 @@ public class SettingsScreen implements Screen {
             Path logDirectoryPath = chooser.getCurrentDirectory().toPath();
             if (Files.isDirectory(logDirectoryPath)) {
                 LOGGER.log(Level.INFO, "Changed log directory", logDirectoryPath);
-                window.getClient().writeToSettingsFile("logDirectory", logDirectoryPath);
-                window.changeLogDirectory(logDirectoryPath.toString());
-                window.getClient().writeToSettingsFile("logDirectory", logDirectoryPath.toString());
+                window.getClient().getSettings().setLogsDirectory(logDirectoryPath.toString());
             } else {
                 resultLabel.setText(window.getLanguageBundle().getString("settings.invalid_path"));
                 window.pack();
             }
         });
 
-        goBackButton.addActionListener(e -> window.setScreen(window.getLastScreen()));
+        goBackButton.addActionListener(e -> {
+            window.setScreen(window.getLastScreen());
+            window.getClient().saveSettings("saved manually");
+        });
 
         deleteAccountButton.addActionListener(e -> {
             Object[] options = {window.getLangString("app.yes"), window.getLangString("app.no")};
@@ -117,11 +116,11 @@ public class SettingsScreen implements Screen {
     }
 
     private void updateLanguage() {
-        XnorLocale newLang = languageComboBox.getItemAt(languageComboBox.getSelectedIndex());
+        XnorLanguage newLang = languageComboBox.getItemAt(languageComboBox.getSelectedIndex());
         if (lang.equals(newLang)) return;
         lang = newLang;
+        window.getClient().getSettings().setLanguage(lang);
         window.changeLanguage(lang.getLocale());
-        window.getClient().writeToSettingsFile("language", lang);
         LOGGER.log(Level.INFO, "Changed app language", lang);
     }
 
@@ -173,7 +172,7 @@ public class SettingsScreen implements Screen {
         autoSavePeriodLabel.setText(window.getLangString("settings.auto_save_period"));
 
         for (int i = 0; i < languageComboBox.getItemCount(); i++) {
-            XnorLocale xl = languageComboBox.getItemAt(i);
+            XnorLanguage xl = languageComboBox.getItemAt(i);
             xl.setLocaleName(window.getLangString("app." + xl.getLocale().toString() + "_name"));
         }
     }

@@ -9,10 +9,9 @@ import lombok.Setter;
 import java.io.*;
 import java.net.Socket;
 import java.time.LocalDateTime;
-import java.util.Properties;
-import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,21 +23,29 @@ public class XnorDesktopClient {
     private final Socket socket;
     @Getter
     private final XnorWindow window;
-    @Getter @Setter
+    @Getter
+    @Setter
     private User user;
-    @Getter @Setter
+    @Getter
+    @Setter
     private Chat chat;
-    @Getter @Setter
+    @Getter
+    @Setter
     private boolean isLoggedIn;
-    @Getter @Setter
+    @Getter
+    @Setter
     private boolean isOnline;
-    @Getter @Setter
+    @Getter
+    @Setter
     private boolean isVLCAvailable;
 
-    private final Properties settings;
+    @Getter
+    private final XnorSettings settings;
+
+    private ScheduledExecutorService executor;
 
     public XnorDesktopClient(Socket s, boolean isOnline, boolean isVLCAvailable) {
-        settings = new Properties();
+        settings = new XnorSettings();
         tryInitializeAppDataDirectory();
         socket = s;
         this.isOnline = isOnline;
@@ -46,9 +53,6 @@ public class XnorDesktopClient {
         window = new XnorWindow(this);
         user = new User(-1, "dupa", "dupa dupa", LocalDateTime.MIN);
         chat = new Chat(-1, "dupa", LocalDateTime.MIN, -1);
-
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-
     }
 
     private void tryInitializeAppDataDirectory() {
@@ -69,71 +73,29 @@ public class XnorDesktopClient {
 
             FileReader reader = new FileReader(file);
             settings.load(reader);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public String getSetting(String settingName) {
-        return settings.getProperty(settingName, "null");
+    public void startAutoSave(int period) {
+        if (!executor.isShutdown()) {
+            executor.shutdown();
+            executor = null;
+        }
+        if (executor == null) executor = Executors.newSingleThreadScheduledExecutor();
+
+        executor.scheduleAtFixedRate(() -> saveSettings("auto-save"), 1, period, TimeUnit.MINUTES);
     }
 
-    public void setSetting(String settingName, String setting) {
-        settings.setProperty(settingName, setting);
-    }
-
-    private void saveSettingsToFile() {
+    public void saveSettings(String comments) {
         try {
-            FileWriter settingsWriter = new FileWriter(XnorClientConstants.XNOR_SETTINGS_FILE);
-            settings.store(settingsWriter, "auto-save");
+            settings.saveToFile(new FileWriter(XnorClientConstants.XNOR_SETTINGS_FILE), comments);
             LOGGER.log(Level.INFO, "Auto-saved settings");
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void writeToSettingsFile(String key, Object value) {
-        try {
-            File file = new File(System.getenv("APPDATA") + "\\xnor\\settings.txt");
-            Scanner scanner = new Scanner(file);
-            String validdata = "";
-            while(scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if(line.startsWith(key)) {
-                    validdata += key + " : " + value.toString() + "\n";
-                } else {
-                    validdata += line + "\n";
-                }
-            }
-
-            FileWriter writer = new FileWriter(file);
-            writer.write(validdata);
-            writer.close();
-
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-    }
-
-    public String readFromSettingsFile(String key) {
-        try {
-            File file = new File(System.getenv("APPDATA") + "\\xnor\\settings.txt");
-            Scanner scanner = new Scanner(file);
-
-            while(scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if(line.startsWith(key)) {
-                    return line.split(" : ")[1];
-                }
-            }
-
-        } catch (FileNotFoundException ex) {
-            tryInitializeAppDataDirectory();
-            readFromSettingsFile(key);
-        }
-        return "";
     }
 
     public void start() {

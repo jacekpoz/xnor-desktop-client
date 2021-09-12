@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -75,12 +76,16 @@ public class RegisterScreen implements Screen {
             return;
         }
 
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+
         Hasher hasher = jargon2Hasher()
                 .type(Type.ARGON2d)
                 .memoryCost(65536)
                 .timeCost(3)
                 .parallelism(4)
-                .saltLength(16)
+                .salt(salt)
                 .hashLength(64);
 
         String hash = hasher
@@ -94,6 +99,7 @@ public class RegisterScreen implements Screen {
         );
         register.putValue("username", username);
         register.putValue("hash", hash);
+        register.putValue("salt", new String(salt));
         window.send(register);
     }
 

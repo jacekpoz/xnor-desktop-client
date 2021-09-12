@@ -16,15 +16,15 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.kosprov.jargon2.api.Jargon2.*;
 
 public class LoginScreen implements Screen {
 
@@ -43,10 +43,12 @@ public class LoginScreen implements Screen {
     private JButton settingsButton;
     private JCheckBox rememberMeCheckBox;
 
+    private char[] password;
+
     public LoginScreen(XnorWindow w) {
         window = w;
         nicknameField.addActionListener(e -> SwingUtilities.invokeLater(passwordField::requestFocusInWindow));
-        ActionListener al = e -> login(nicknameField.getText(), passwordField.getPassword(), false);
+        ActionListener al = e -> login(nicknameField.getText(), passwordField.getPassword());
         passwordField.addActionListener(al);
         loginButton.addActionListener(al);
         registerButton.addActionListener(e -> window.setScreen(window.getRegisterScreen()));
@@ -56,59 +58,24 @@ public class LoginScreen implements Screen {
             window.setLastScreen(this);
         });
 
-        try {
-            File f = new File(System.getenv("APPDATA") + "/xnor/settings.txt");
-            Scanner reader = new Scanner(f);
-
-            boolean autoLogin = false;
-            String usernameFromFile = "";
-            char[] passwordFromFile = new char[0];
-
-            while (reader.hasNextLine()) {
-                String line = reader.nextLine();
-                if (line.startsWith("AutoLogin")) {
-                    autoLogin = Boolean.parseBoolean(line.split(" : ")[1]);
-                }
-                if (line.startsWith("Username")) {
-                    usernameFromFile = line.split(" : ")[1];
-                }
-                if (line.startsWith("Password")) {
-                    String pw = line.split(" : ")[1];
-                    passwordFromFile = pw.toCharArray();
-                }
-            }
-
-            if (autoLogin) {
-                login(usernameFromFile, passwordFromFile, true);
-                rememberMeCheckBox.setSelected(true);
-            }
-        } catch (FileNotFoundException ex) {
-
-        }
     }
 
-    private void login(String username, char[] password, boolean autologin) {
+    private void login(String username, char[] password) {
 
         if (username.isEmpty() || password.length == 0) {
             result.setText(window.getLangString("login.input_name_and_password"));
             return;
         }
 
+        this.password = password;
+
         UserQuery login = new UserQuery(
                 false,
                 getScreenID(),
                 UserQueryEnum.LOGIN
         );
-        login.putValue("username", username);
-        login.putValue("password", new String(password).getBytes(StandardCharsets.UTF_8));
 
-        if (!autologin) {
-            window.getClient().writeToSettingsFile("AutoLogin", rememberMeCheckBox.isSelected());
-            window.getClient().writeToSettingsFile("Username", username);
-            // ok this is absolutely unsafe but 1 this isnt yet used by anyone except us and 2 i dont know how to make it better and 3
-            window.getClient().writeToSettingsFile("Password", passwordField.getText());
-        }
-
+        login.putValue("username", nicknameField.getText());
         window.send(login);
     }
 
@@ -140,31 +107,29 @@ public class LoginScreen implements Screen {
         if (s instanceof LoginResult) {
             LoginResult lr = (LoginResult) s;
 
-            switch (lr.getResult()) {
-                case LOGGED_IN: {
-                    User u = lr.get(0);
-                    window.getClient().setUser(u);
-                    window.getClient().setLoggedIn(true);
-                    window.setScreen(window.getMessageScreen());
-                    update();
-                    result.setText(window.getLangString("login.logged_in"));
-                    LOGGER.log(Level.INFO, "Logged in", u);
-                    break;
-                }
-                case ACCOUNT_DOESNT_EXIST:
-                    LOGGER.log(Level.INFO, "Account doesn't exist");
-                    result.setText(window.getLangString("login.account_doesnt_exist"));
-                    break;
-                case WRONG_PASSWORD:
-                    LOGGER.log(Level.INFO, "Wrong password");
-                    result.setText(window.getLangString("login.wrong_password"));
-                    break;
-                case SQL_EXCEPTION:
-                    LOGGER.log(Level.SEVERE, "An SQLException occured while logging in ", lr.getEx());
-                    result.setText(window.getLangString("app.sql_exception"));
-                    break;
-                default:
-                    throw new IllegalArgumentException();
+            Hasher hasher = jargon2Hasher()
+                    .type(Type.ARGON2d)
+                    .memoryCost(65536)
+                    .timeCost(3)
+                    .parallelism(4)
+                    .salt(lr.getSalt().getBytes(StandardCharsets.UTF_8))
+                    .hashLength(64);
+
+            String hash = hasher
+                    .password(new String(password).getBytes(StandardCharsets.UTF_8))
+                    .encodedHash();
+
+            if (hash.equals(lr.get(0).getHash())) {
+                User u = lr.get(0);
+                window.getClient().setUser(u);
+                window.getClient().setLoggedIn(true);
+                window.setScreen(window.getMessageScreen());
+                update();
+                result.setText(window.getLangString("login.logged_in"));
+                LOGGER.log(Level.INFO, "Logged in", u);
+            } else {
+                result.setText(window.getLangString("login.failure_logging_in"));
+                LOGGER.log(Level.INFO, "Failure logging in");
             }
         }
     }

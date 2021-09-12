@@ -1,11 +1,12 @@
 package com.github.jacekpoz.client.desktop.gui;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.jacekpoz.client.desktop.XnorClientConstants;
 import com.github.jacekpoz.client.desktop.XnorDesktopClient;
 import com.github.jacekpoz.client.desktop.InputHandler;
-import com.github.jacekpoz.client.desktop.XnorLocale;
+import com.github.jacekpoz.client.desktop.XnorLanguage;
 import com.github.jacekpoz.client.desktop.gui.screens.*;
-import com.github.jacekpoz.client.desktop.logging.LogFormatter;
+import com.github.jacekpoz.client.desktop.logging.XnorLogFormatter;
 import com.github.jacekpoz.common.jackson.JsonObjectMapper;
 import com.github.jacekpoz.common.sendables.Sendable;
 import lombok.Getter;
@@ -79,7 +80,7 @@ public class XnorWindow extends JFrame {
         client = c;
 
         languageBundle = ResourceBundle.getBundle("lang");
-        logDirectory = System.getenv("APPDATA") + "/xnor/logs/";
+        logDirectory = XnorClientConstants.XNOR_LOGS_DIRECTORY;
         ROOT_LOGGER.setUseParentHandlers(false);
         changeLogDirectory(logDirectory);
 
@@ -103,7 +104,7 @@ public class XnorWindow extends JFrame {
 
         screens = new Screen[] {messageScreen, loginScreen, registerScreen, friendsScreen, createChatsScreen, settingsScreen};
 
-        changeLanguage(XnorLocale.en_US.getLocale());
+        changeLanguage(client.getSettings().getLanguage().getLocale());
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setIconImage(new ImageIcon(getClass().getResource("/images/logo/xnor_icon.png")).getImage());
@@ -167,7 +168,7 @@ public class XnorWindow extends JFrame {
                     .format(new Date(System.currentTimeMillis())) + ".log";
             FileHandler fh = new FileHandler(logFile);
             currentLogFile = logFile;
-            fh.setFormatter(new LogFormatter());
+            fh.setFormatter(new XnorLogFormatter());
             ROOT_LOGGER.addHandler(fh);
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Failed to create log file", e);
@@ -183,7 +184,9 @@ public class XnorWindow extends JFrame {
         setScreen(loginScreen);
         loginScreen.updateUI();
         registerScreen.updateUI();
+        settingsScreen.update();
         settingsScreen.updateUI();
         client.setUser(null);
+        client.setChat(null);
     }
 }
